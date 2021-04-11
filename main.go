@@ -1,6 +1,7 @@
 package main
 
 import (
+	"github.com/fabiancdng/GoShortrr/internal/api"
 	"github.com/fabiancdng/GoShortrr/internal/database"
 	_ "github.com/go-sql-driver/mysql"
 	"github.com/gofiber/fiber/v2"
@@ -23,7 +24,9 @@ func main() {
 	})
 
 	// Routes for managing shortlinks
-	app.Get("/api/create")
+	app.Get("/api/shortlink/get", api.GetShortlink)
+	app.Post("/api/shortlink/create", api.CreateShortlink)
+	app.Delete("/api/shortlink/delete", api.DeleteShortlink)
 
 	// Routes for managing users
 

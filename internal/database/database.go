@@ -9,7 +9,7 @@ func DBConnection() (db *sql.DB) {
 	db, err := sql.Open("mysql", "GoShortrr:5lVX97KMM9SbM6UH@tcp(127.0.0.1:3306)/goshortrr")
 
 	if err != nil {
-		log.Panic("Couldn't establish MySQL connection.")
+		panic("Can't establish MySQL connection.")
 	}
 
 	return db
@@ -24,4 +24,41 @@ func Init() {
 		panic(err)
 	}
 
+	defer db.Close()
+}
+
+func InsertShortlink(link string, short string, user int, password string) bool {
+	db := DBConnection()
+
+	_, err := db.Exec("INSERT INTO `shortlinks` (`id`, `link`, `short`, `user`, `password`, `created`) VALUES (NULL, ?, ?, ?, ?, current_timestamp());", link, short, user, password)
+
+	defer db.Close()
+
+	if err != nil {
+		log.Println("[CREATE]", err)
+		return false
+	}
+
+	return true
+}
+
+func ValidateShortlink(short string) bool {
+	if len(short) > 30 {
+		return false
+	}
+
+	// Check if shortlink is already taken
+	db := DBConnection()
+	rows, err := db.Query("SELECT * FROM `shortlinks` WHERE `short` = ?", short)
+
+	if err != nil {
+		log.Println(err)
+	}
+
+	if rows.Next() {
+		// Shortlink is already taken
+		return false
+	}
+
+	return true
 }
