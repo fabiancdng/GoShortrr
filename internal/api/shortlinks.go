@@ -23,15 +23,16 @@ func CreateShortlink(c *fiber.Ctx) error {
 
 	if shortlinkToCreate.Short == "" {
 		for database.ValidateShortlink(shortlinkToCreate.Short) == false {
-			shortlinkToCreate.Short, _ = utils.GenerateShort(5)
+			short, _ := utils.GenerateShort(5)
+			shortlinkToCreate.Short = short
 		}
 	}
 
 	if database.ValidateShortlink(shortlinkToCreate.Short) == false {
-		return fiber.NewError(409, "shortlink already taken")
+		return fiber.NewError(409, "shortlink invalid or already taken")
 	}
 
-	database.InsertShortlink(
+	database.CreateShortlink(
 		shortlinkToCreate.Link,
 		shortlinkToCreate.Short,
 		1,

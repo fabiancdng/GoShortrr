@@ -27,7 +27,7 @@ func Init() {
 	defer db.Close()
 }
 
-func InsertShortlink(link string, short string, user int, password string) bool {
+func CreateShortlink(link string, short string, user int, password string) bool {
 	db := DBConnection()
 
 	_, err := db.Exec("INSERT INTO `shortlinks` (`id`, `link`, `short`, `user`, `password`, `created`) VALUES (NULL, ?, ?, ?, ?, current_timestamp());", link, short, user, password)
@@ -43,7 +43,13 @@ func InsertShortlink(link string, short string, user int, password string) bool 
 }
 
 func ValidateShortlink(short string) bool {
+	if short == "" {
+		// Shortlink can't be empty
+		return false
+	}
+
 	if len(short) > 30 {
+		// Shortlink too long
 		return false
 	}
 
@@ -60,5 +66,6 @@ func ValidateShortlink(short string) bool {
 		return false
 	}
 
+	// Shortlink is valid
 	return true
 }
