@@ -3,6 +3,9 @@ package database
 import (
 	"database/sql"
 	"log"
+
+	"github.com/fabiancdng/GoShortrr/internal/shortlink"
+	"github.com/gofiber/fiber/v2"
 )
 
 func DBConnection() (db *sql.DB) {
@@ -55,17 +58,54 @@ func ValidateShortlink(short string) bool {
 
 	// Check if shortlink is already taken
 	db := DBConnection()
-	rows, err := db.Query("SELECT * FROM `shortlinks` WHERE `short` = ?", short)
+	result, err := db.Query("SELECT * FROM `shortlinks` WHERE `short` = ?", short)
 
 	if err != nil {
 		log.Println(err)
 	}
 
-	if rows.Next() {
+	if result.Next() {
 		// Shortlink is already taken
 		return false
 	}
 
+	defer db.Close()
+
 	// Shortlink is valid
 	return true
+}
+
+func GetShortlink(short string) (shortlink.Shortlink, error) {
+	var shortlink shortlink.Shortlink
+	var shortlinkPassword string
+	db := DBConnection()
+
+	result, err := db.Query("SELECT * FROM `shortlinks` WHERE `short` = ?", short)
+
+	if err != nil {
+		log.Println(err)
+	}
+
+	defer db.Close()
+
+	if result.Next() {
+		result.Scan(
+			&shortlink.Id,
+			&shortlink.Link,
+			&shortlink.Short,
+			&shortlink.User,
+			&shortlinkPassword,
+			&shortlink.Created,
+		)
+
+		if shortlinkPassword == "" {
+			shortlink.Password = false
+		} else {
+			shortlink.Password = true
+		}
+
+		return shortlink, nil
+	}
+
+	return shortlink, fiber.NewError(404, "shortlink not found")
 }

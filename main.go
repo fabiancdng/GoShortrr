@@ -24,7 +24,7 @@ func main() {
 	})
 
 	// Routes for managing shortlinks
-	app.Get("/api/shortlink/get", api.GetShortlink)
+	app.Get("/api/shortlink/get/:short", api.GetShortlink)
 	app.Post("/api/shortlink/create", api.CreateShortlink)
 	app.Delete("/api/shortlink/delete", api.DeleteShortlink)
 

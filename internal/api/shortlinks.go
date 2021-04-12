@@ -14,7 +14,13 @@ type ShortlinkToCreate struct {
 }
 
 func GetShortlink(c *fiber.Ctx) error {
-	return c.SendString("Get shortlink")
+	shortlink, err := database.GetShortlink(c.Params("short"))
+
+	if err != nil {
+		return err
+	}
+
+	return c.JSON(shortlink)
 }
 
 func CreateShortlink(c *fiber.Ctx) error {
