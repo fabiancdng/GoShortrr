@@ -9,7 +9,7 @@ import (
 )
 
 func DBConnection() (db *sql.DB) {
-	db, err := sql.Open("mysql", "GoShortrr:5lVX97KMM9SbM6UH@tcp(127.0.0.1:3306)/goshortrr")
+	db, err := sql.Open("mysql", "GoShortrr:5lVX97KMM9SbM6UH@tcp(127.0.0.1:3306)/goshortrr?parseTime=true")
 
 	if err != nil {
 		panic("Can't establish MySQL connection.")
@@ -27,13 +27,19 @@ func Init() {
 		panic(err)
 	}
 
+	_, err = db.Query("CREATE TABLE IF NOT EXISTS `goshortrr`.`users` ( `user_id` INT NOT NULL AUTO_INCREMENT , `username` VARCHAR(50) NOT NULL , `password` VARCHAR(200) NOT NULL , `role` TINYINT NOT NULL , PRIMARY KEY (`user_id`)) ENGINE = InnoDB;")
+
+	if err != nil {
+		panic(err)
+	}
+
 	defer db.Close()
 }
 
 func CreateShortlink(link string, short string, user int, password string) bool {
 	db := DBConnection()
 
-	_, err := db.Exec("INSERT INTO `shortlinks` (`id`, `link`, `short`, `user`, `password`, `created`) VALUES (NULL, ?, ?, ?, ?, current_timestamp());", link, short, user, password)
+	_, err := db.Exec("INSERT INTO `shortlinks` (`id`, `link`, `short`, `user`, `password`, `created`) VALUES (NULL, ?, ?, ?, ?, CURRENT_TIMESTAMP());", link, short, user, password)
 
 	defer db.Close()
 

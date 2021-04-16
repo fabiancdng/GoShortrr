@@ -1,3 +1,13 @@
+/*
+	++++++++++++++++++++++++++ GoShortrr ++++++++++++++++++++++++++
+
+	A fast, simple and powerful URL Shortener built with Go and React.
+
+	Copyright (c) 2021 Fabian R. (fabiancdng)
+
+	+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+*/
+
 package main
 
 import (
@@ -5,6 +15,7 @@ import (
 	"github.com/fabiancdng/GoShortrr/internal/database"
 	_ "github.com/go-sql-driver/mysql"
 	"github.com/gofiber/fiber/v2"
+	"github.com/gofiber/fiber/v2/middleware/monitor"
 )
 
 func main() {
@@ -15,6 +26,9 @@ func main() {
 
 	// Serve production build of React app
 	app.Static("/", "./web/build")
+
+	// Serve server monitor from Fiber middleware
+	app.Get("/monitor", monitor.New())
 
 	//////////////// ~ API ~ ////////////////
 
@@ -28,9 +42,8 @@ func main() {
 	app.Post("/api/shortlink/create", api.CreateShortlink)
 	app.Delete("/api/shortlink/delete", api.DeleteShortlink)
 
-	// Routes for managing users
-
-	// Routes for managing keys
+	// Routes for managing authentication / users
+	app.Post("/api/auth/create", api.CreateUser)
 
 	app.Listen(":4000")
 }
