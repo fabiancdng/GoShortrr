@@ -1,22 +1,11 @@
 package database
 
 import (
-	"database/sql"
 	"log"
 
-	"github.com/fabiancdng/GoShortrr/internal/shortlink"
+	"github.com/fabiancdng/GoShortrr/internal/models"
 	"github.com/gofiber/fiber/v2"
 )
-
-func DBConnection() (db *sql.DB) {
-	db, err := sql.Open("mysql", "GoShortrr:5lVX97KMM9SbM6UH@tcp(127.0.0.1:3306)/goshortrr?parseTime=true")
-
-	if err != nil {
-		panic("Can't establish MySQL connection.")
-	}
-
-	return db
-}
 
 func Init() {
 	db := DBConnection()
@@ -81,8 +70,8 @@ func ValidateShortlink(short string) bool {
 	return true
 }
 
-func GetShortlink(short string) (shortlink.Shortlink, error) {
-	var shortlink shortlink.Shortlink
+func GetShortlink(short string) (models.Shortlink, error) {
+	var shortlink models.Shortlink
 	var shortlinkPassword string
 	db := DBConnection()
 
