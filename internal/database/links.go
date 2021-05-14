@@ -16,7 +16,7 @@ func Init() {
 		panic(err)
 	}
 
-	_, err = db.Query("CREATE TABLE IF NOT EXISTS `goshortrr`.`users` ( `user_id` INT NOT NULL AUTO_INCREMENT , `username` VARCHAR(50) NOT NULL , `password` VARCHAR(200) NOT NULL , `role` TINYINT NOT NULL , PRIMARY KEY (`user_id`)) ENGINE = InnoDB;")
+	_, err = db.Query("CREATE TABLE IF NOT EXISTS `goshortrr`.`users` ( `user_id` INT NOT NULL AUTO_INCREMENT , `username` VARCHAR(50) NOT NULL , `password` VARCHAR(200) NOT NULL , `role` TINYINT NOT NULL , `created` TIMESTAMP NOT NULL , PRIMARY KEY (`user_id`)) ENGINE = InnoDB;")
 
 	if err != nil {
 		panic(err)
@@ -33,7 +33,7 @@ func CreateShortlink(link string, short string, user int, password string) bool 
 	defer db.Close()
 
 	if err != nil {
-		log.Println("[CREATE]", err)
+		log.Println("[CREATE LINK]", err)
 		return false
 	}
 

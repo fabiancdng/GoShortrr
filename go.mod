@@ -14,6 +14,7 @@ require (
 )
 
 require (
+	github.com/alexedwards/argon2id v0.0.0-20210511081203-7d35d68092b8
 	github.com/andybalholm/brotli v1.0.3 // indirect
 	github.com/gofiber/storage/mysql v0.0.0-20210414071633-6afe536cce80
 	github.com/gofiber/utils v0.1.2 // indirect
@@ -21,5 +22,6 @@ require (
 	github.com/valyala/bytebufferpool v1.0.0 // indirect
 	github.com/valyala/fasthttp v1.31.0 // indirect
 	github.com/valyala/tcplisten v1.0.0 // indirect
+	golang.org/x/crypto v0.0.0-20210513164829-c07d793c2f9a // indirect
 	golang.org/x/sys v0.0.0-20211025201205-69cdffdb9359 // indirect
 )

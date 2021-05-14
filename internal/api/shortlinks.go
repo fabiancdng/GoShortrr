@@ -2,16 +2,10 @@ package api
 
 import (
 	"github.com/fabiancdng/GoShortrr/internal/database"
+	"github.com/fabiancdng/GoShortrr/internal/models"
 	"github.com/fabiancdng/GoShortrr/internal/utils"
 	"github.com/gofiber/fiber/v2"
 )
-
-type ShortlinkToCreate struct {
-	ApiKey   string `json:"-" form:"key"`
-	Link     string `json:"link" form:"link"`
-	Short    string `json:"short" form:"short"`
-	Password string `json:"-" form:"password"`
-}
 
 func GetShortlink(c *fiber.Ctx) error {
 	shortlink, err := database.GetShortlink(c.Params("short"))
@@ -24,7 +18,7 @@ func GetShortlink(c *fiber.Ctx) error {
 }
 
 func CreateShortlink(c *fiber.Ctx) error {
-	shortlinkToCreate := new(ShortlinkToCreate)
+	shortlinkToCreate := new(models.ShortlinkToCreate)
 	c.BodyParser(shortlinkToCreate)
 
 	if shortlinkToCreate.Short == "" {

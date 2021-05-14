@@ -1,9 +1,11 @@
 package api
 
 import (
-	"log"
 	"time"
 
+	"github.com/alexedwards/argon2id"
+	"github.com/fabiancdng/GoShortrr/internal/database"
+	"github.com/fabiancdng/GoShortrr/internal/models"
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/fiber/v2/middleware/session"
 	"github.com/gofiber/storage/mysql"
@@ -27,6 +29,31 @@ var store = session.New(session.Config{
 })
 
 func CreateUser(c *fiber.Ctx) error {
-	log.Println("Test")
-	return nil
+	userToCreate := new(models.UserToCreate)
+	c.BodyParser(userToCreate)
+
+	statusValid := database.ValidateUser(userToCreate)
+
+	if statusValid != 200 {
+		// User is not valid
+		return c.SendStatus(statusValid)
+	}
+
+	hash, err := argon2id.CreateHash(userToCreate.Password, argon2id.DefaultParams)
+
+	if err != nil {
+		return c.SendStatus(500)
+	}
+
+	userToCreate.Password = hash
+
+	statusCreate := database.CreateUser(userToCreate)
+
+	if statusCreate == true {
+		// User has been created
+		return c.SendStatus(200)
+	} else {
+		// Error
+		return c.SendStatus(500)
+	}
 }
