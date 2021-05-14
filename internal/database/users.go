@@ -4,6 +4,7 @@ import (
 	"log"
 
 	"github.com/fabiancdng/GoShortrr/internal/models"
+	"github.com/gofiber/fiber/v2"
 )
 
 func CreateUser(userToCreate *models.UserToCreate) bool {
@@ -66,4 +67,39 @@ func ValidateUser(userToCreate *models.UserToCreate) int {
 
 	// User valid
 	return 200
+}
+
+func GetUser(short string) (models.Shortlink, error) {
+	var shortlink models.Shortlink
+	var shortlinkPassword string
+	db := DBConnection()
+
+	result, err := db.Query("SELECT * FROM `shortlinks` WHERE `short` = ?", short)
+
+	if err != nil {
+		log.Println(err)
+	}
+
+	defer db.Close()
+
+	if result.Next() {
+		result.Scan(
+			&shortlink.Id,
+			&shortlink.Link,
+			&shortlink.Short,
+			&shortlink.User,
+			&shortlinkPassword,
+			&shortlink.Created,
+		)
+
+		if shortlinkPassword == "" {
+			shortlink.Password = false
+		} else {
+			shortlink.Password = true
+		}
+
+		return shortlink, nil
+	}
+
+	return shortlink, fiber.NewError(404, "shortlink not found")
 }

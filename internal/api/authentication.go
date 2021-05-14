@@ -28,7 +28,7 @@ var store = session.New(session.Config{
 	Storage: storage,
 })
 
-func CreateUser(c *fiber.Ctx) error {
+func RegisterUser(c *fiber.Ctx) error {
 	userToCreate := new(models.UserToCreate)
 	c.BodyParser(userToCreate)
 
@@ -56,4 +56,14 @@ func CreateUser(c *fiber.Ctx) error {
 		// Error
 		return c.SendStatus(500)
 	}
+}
+
+func LoginUser(c *fiber.Ctx) error {
+	shortlink, err := database.GetUser(c.Params("short"))
+
+	if err != nil {
+		return err
+	}
+
+	return c.JSON(shortlink)
 }

@@ -43,7 +43,8 @@ func main() {
 	app.Delete("/api/shortlink/delete", api.DeleteShortlink)
 
 	// Routes for managing authentication / users
-	app.Post("/api/auth/create", api.CreateUser)
+	app.Post("/api/auth/login", api.LoginUser)
+	app.Post("/api/auth/register", api.RegisterUser)
 
 	app.Listen(":4000")
 }
