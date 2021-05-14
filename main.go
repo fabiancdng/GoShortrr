@@ -25,7 +25,7 @@ func main() {
 	app := fiber.New()
 
 	// Serve production build of React app
-	app.Static("/", "./web/build")
+	app.Static("/*", "./web/build")
 
 	// Serve server monitor from Fiber middleware
 	app.Get("/monitor", monitor.New())
