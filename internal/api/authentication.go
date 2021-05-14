@@ -29,28 +29,28 @@ var store = session.New(session.Config{
 })
 
 func RegisterUser(c *fiber.Ctx) error {
-	userToCreate := new(models.UserToCreate)
-	c.BodyParser(userToCreate)
+	user := new(models.User)
+	c.BodyParser(user)
 
-	statusValid := database.ValidateUser(userToCreate)
+	statusValid := database.ValidateUser(user)
 
 	if statusValid != 200 {
 		// User is not valid
 		return c.SendStatus(statusValid)
 	}
 
-	hash, err := argon2id.CreateHash(userToCreate.Password, argon2id.DefaultParams)
+	hash, err := argon2id.CreateHash(user.Password, argon2id.DefaultParams)
 
 	if err != nil {
 		return c.SendStatus(500)
 	}
 
-	userToCreate.Password = hash
+	user.Password = hash
 
-	statusCreate := database.CreateUser(userToCreate)
+	statusCreate := database.CreateUser(user)
 
 	if statusCreate == true {
-		// User has been created
+		// User has successfully been created
 		return c.SendStatus(200)
 	} else {
 		// Error

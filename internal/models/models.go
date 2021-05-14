@@ -18,7 +18,7 @@ type ShortlinkToCreate struct {
 	Password string `json:"-" form:"password"`
 }
 
-type UserToCreate struct {
+type User struct {
 	Username string `json:"username" form:"username"`
 	Password string `json:"-" form:"password"`
 	Role     int    `json:"role" form:"role"`

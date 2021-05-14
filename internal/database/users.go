@@ -7,10 +7,10 @@ import (
 	"github.com/gofiber/fiber/v2"
 )
 
-func CreateUser(userToCreate *models.UserToCreate) bool {
+func CreateUser(user *models.User) bool {
 	db := DBConnection()
 
-	_, err := db.Exec("INSERT INTO `users` (`user_id`, `username`, `password`, `role`, `created`) VALUES (NULL, ?, ?, ?, CURRENT_TIMESTAMP());", userToCreate.Username, userToCreate.Password, userToCreate.Role)
+	_, err := db.Exec("INSERT INTO `users` (`user_id`, `username`, `password`, `role`, `created`) VALUES (NULL, ?, ?, ?, CURRENT_TIMESTAMP());", user.Username, user.Password, user.Role)
 
 	defer db.Close()
 
@@ -29,30 +29,30 @@ func CreateUser(userToCreate *models.UserToCreate) bool {
 // 804 		Password too long
 // 805 		Username already taken
 
-func ValidateUser(userToCreate *models.UserToCreate) int {
-	if len(userToCreate.Username) < 5 {
+func ValidateUser(user *models.User) int {
+	if len(user.Username) < 5 {
 		// Username too short
 		return 801
 	}
 
-	if len(userToCreate.Username) > 49 {
+	if len(user.Username) > 49 {
 		// Username too long
 		return 802
 	}
 
-	if len(userToCreate.Password) < 5 {
+	if len(user.Password) < 5 {
 		// Password too short
 		return 803
 	}
 
-	if len(userToCreate.Password) > 199 {
+	if len(user.Password) > 199 {
 		// Password too long
 		return 804
 	}
 
 	// Check if username is already taken
 	db := DBConnection()
-	result, err := db.Query("SELECT * FROM `users` WHERE `username` = ?", userToCreate.Username)
+	result, err := db.Query("SELECT * FROM `users` WHERE `username` = ?", user.Username)
 
 	if err != nil {
 		log.Println(err)
