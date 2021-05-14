@@ -19,7 +19,14 @@ type ShortlinkToCreate struct {
 }
 
 type User struct {
-	Username string `json:"username" form:"username"`
-	Password string `json:"-" form:"password"`
-	Role     int    `json:"role" form:"role"`
+	Id       int       `json:"-"`
+	Username string    `json:"username"`
+	Password string    `json:"password"`
+	Role     int       `json:"role"`
+	Created  time.Time `json:"-"`
+}
+
+type Login struct {
+	Username string `json:"username"`
+	Password string `json:"password"`
 }

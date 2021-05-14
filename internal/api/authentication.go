@@ -1,6 +1,7 @@
 package api
 
 import (
+	"log"
 	"time"
 
 	"github.com/alexedwards/argon2id"
@@ -13,19 +14,19 @@ import (
 
 // Storage for Fiber (mainly for sessions)
 var storage = mysql.New(mysql.Config{
-	Host:       "127.0.0.1",
-	Port:       3306,
-	Database:   "goshortrr",
-	Username:   "goshortrr",
-	Password:   "5lVX97KMM9SbM6UH",
-	Table:      "fiber_storage",
-	Reset:      false,
-	GCInterval: 10 * time.Second,
+	Host:     "127.0.0.1",
+	Port:     3306,
+	Database: "goshortrr",
+	Username: "goshortrr",
+	Password: "5lVX97KMM9SbM6UH",
+	Table:    "sessions",
+	Reset:    false,
 })
 
 // Sessions
 var store = session.New(session.Config{
-	Storage: storage,
+	Storage:    storage,
+	Expiration: 24 * time.Hour * 30,
 })
 
 func RegisterUser(c *fiber.Ctx) error {
@@ -59,11 +60,25 @@ func RegisterUser(c *fiber.Ctx) error {
 }
 
 func LoginUser(c *fiber.Ctx) error {
-	shortlink, err := database.GetUser(c.Params("short"))
+	login := new(models.Login)
+	c.BodyParser(login)
+
+	user, err := database.GetUser(*login)
 
 	if err != nil {
 		return err
 	}
 
-	return c.JSON(shortlink)
+	sess, err := store.Get(c)
+
+	if err != nil {
+		log.Println(err)
+		return fiber.NewError(500)
+	}
+
+	sess.Set("username", user.Username)
+
+	defer sess.Save()
+
+	return c.SendStatus(200)
 }

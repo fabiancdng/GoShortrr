@@ -3,6 +3,7 @@ package database
 import (
 	"log"
 
+	"github.com/alexedwards/argon2id"
 	"github.com/fabiancdng/GoShortrr/internal/models"
 	"github.com/gofiber/fiber/v2"
 )
@@ -69,12 +70,12 @@ func ValidateUser(user *models.User) int {
 	return 200
 }
 
-func GetUser(short string) (models.Shortlink, error) {
-	var shortlink models.Shortlink
-	var shortlinkPassword string
+func GetUser(login models.Login) (models.User, error) {
+	var user models.User
+
 	db := DBConnection()
 
-	result, err := db.Query("SELECT * FROM `shortlinks` WHERE `short` = ?", short)
+	result, err := db.Query("SELECT * FROM `users` WHERE `username` = ?", login.Username)
 
 	if err != nil {
 		log.Println(err)
@@ -84,22 +85,24 @@ func GetUser(short string) (models.Shortlink, error) {
 
 	if result.Next() {
 		result.Scan(
-			&shortlink.Id,
-			&shortlink.Link,
-			&shortlink.Short,
-			&shortlink.User,
-			&shortlinkPassword,
-			&shortlink.Created,
+			&user.Id,
+			&user.Username,
+			&user.Password,
+			&user.Role,
+			&user.Created,
 		)
 
-		if shortlinkPassword == "" {
-			shortlink.Password = false
-		} else {
-			shortlink.Password = true
+		match, err := argon2id.ComparePasswordAndHash(login.Password, user.Password)
+
+		if err != nil {
+			log.Println(err)
+			return user, fiber.NewError(500)
 		}
 
-		return shortlink, nil
+		if match == true {
+			return user, nil
+		}
 	}
 
-	return shortlink, fiber.NewError(404, "shortlink not found")
+	return user, fiber.NewError(500, "invalid user")
 }
