@@ -3,7 +3,7 @@
 
 	A fast, simple and powerful URL Shortener built with Go and React.
 
-	Copyright (c) 2021 Fabian R. (fabiancdng)
+				Copyright (c) 2021 Fabian R. (fabiancdng)
 
 	+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 */
