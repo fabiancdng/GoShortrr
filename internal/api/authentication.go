@@ -7,6 +7,7 @@ import (
 	"github.com/alexedwards/argon2id"
 	"github.com/fabiancdng/GoShortrr/internal/database"
 	"github.com/fabiancdng/GoShortrr/internal/models"
+	"github.com/fabiancdng/GoShortrr/internal/utils"
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/fiber/v2/middleware/session"
 	"github.com/gofiber/storage/mysql"
@@ -30,36 +31,6 @@ var store = session.New(session.Config{
 })
 
 func RegisterUser(c *fiber.Ctx) error {
-	sessionCookie := c.Cookies("session_id")
-
-	// Check if request is authorized
-	if sessionCookie == "" {
-		return c.SendStatus(401)
-	} else {
-		// Check if user has sufficient permissions
-		sess, err := store.Get(c)
-
-		if err != nil {
-			log.Println(err)
-			return fiber.NewError(500)
-		}
-
-		username := sess.Get("username")
-
-		if username == nil {
-			return fiber.NewError(500, "invalid session")
-		}
-
-		user, err := database.GetUser(username.(string))
-
-		if err != nil {
-			return fiber.NewError(500, "invalid session")
-		}
-
-		if user.Role < 1 {
-			return fiber.NewError(401, "insufficient permissions")
-		}
-	}
 
 	user := new(models.User)
 	c.BodyParser(user)
@@ -115,33 +86,14 @@ func LoginUser(c *fiber.Ctx) error {
 }
 
 func GetUser(c *fiber.Ctx) error {
-	sessionCookie := c.Cookies("session_id")
+	user, err := utils.GetUserBySession(c, store, false)
 
-	if sessionCookie == "" {
-		return c.SendStatus(401)
-	} else {
-		sess, err := store.Get(c)
-
-		if err != nil {
-			log.Println(err)
-			return fiber.NewError(500)
-		}
-
-		username := sess.Get("username")
-
-		if username == nil {
-			return fiber.NewError(500, "invalid session")
-		}
-
-		user, err := database.GetUser(username.(string))
-
-		if err != nil {
-			return fiber.NewError(500, "invalid session")
-		}
-
-		return c.JSON(fiber.Map{
-			"username": user.Username,
-			"role":     user.Role,
-		})
+	if err != nil {
+		return err
 	}
+
+	return c.JSON(fiber.Map{
+		"username": user.Username,
+		"role":     user.Role,
+	})
 }

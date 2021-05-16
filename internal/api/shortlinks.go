@@ -18,6 +18,12 @@ func GetShortlink(c *fiber.Ctx) error {
 }
 
 func CreateShortlink(c *fiber.Ctx) error {
+	user, err := utils.GetUserBySession(c, store, false)
+
+	if err != nil {
+		return err
+	}
+
 	shortlinkToCreate := new(models.ShortlinkToCreate)
 	c.BodyParser(shortlinkToCreate)
 
@@ -32,14 +38,12 @@ func CreateShortlink(c *fiber.Ctx) error {
 		return fiber.NewError(409, "shortlink invalid or already taken")
 	}
 
-	database.CreateShortlink(
-		shortlinkToCreate.Link,
-		shortlinkToCreate.Short,
-		1,
-		shortlinkToCreate.Password,
-	)
+	database.CreateShortlink(shortlinkToCreate, user)
 
-	return c.JSON(shortlinkToCreate)
+	return c.JSON(fiber.Map{
+		"short": shortlinkToCreate.Short,
+		"link":  shortlinkToCreate.Link,
+	})
 }
 
 func DeleteShortlink(c *fiber.Ctx) error {

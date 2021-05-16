@@ -12,10 +12,9 @@ type Shortlink struct {
 }
 
 type ShortlinkToCreate struct {
-	ApiKey   string `json:"-" form:"key"`
-	Link     string `json:"link" form:"link"`
-	Short    string `json:"short" form:"short"`
-	Password string `json:"-" form:"password"`
+	Link     string `json:"link"`
+	Short    string `json:"short"`
+	Password string `json:"password"`
 }
 
 type User struct {

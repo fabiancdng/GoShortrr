@@ -16,7 +16,7 @@ func Init() {
 		panic(err)
 	}
 
-	_, err = db.Query("CREATE TABLE IF NOT EXISTS `goshortrr`.`users` ( `user_id` INT NOT NULL AUTO_INCREMENT , `username` VARCHAR(50) NOT NULL , `password` VARCHAR(200) NOT NULL , `role` TINYINT NOT NULL , `created` TIMESTAMP NOT NULL , PRIMARY KEY (`user_id`)) ENGINE = InnoDB;")
+	_, err = db.Query("CREATE TABLE IF NOT EXISTS `goshortrr`.`shortlinks` ( `id` BIGINT NOT NULL AUTO_INCREMENT , `link` TEXT NOT NULL , `short` VARCHAR(30) NOT NULL , `user` INT NOT NULL , `password` VARCHAR(50) NOT NULL , `created` TIMESTAMP NOT NULL , PRIMARY KEY (`id`), FOREIGN KEY (`user`) REFERENCES `users`(`user_id`)) ENGINE = InnoDB;")
 
 	if err != nil {
 		panic(err)
@@ -25,10 +25,10 @@ func Init() {
 	defer db.Close()
 }
 
-func CreateShortlink(link string, short string, user int, password string) bool {
+func CreateShortlink(shortlinkToCreate *models.ShortlinkToCreate, user *models.User) bool {
 	db := DBConnection()
 
-	_, err := db.Exec("INSERT INTO `shortlinks` (`id`, `link`, `short`, `user`, `password`, `created`) VALUES (NULL, ?, ?, ?, ?, CURRENT_TIMESTAMP());", link, short, user, password)
+	_, err := db.Exec("INSERT INTO `shortlinks` (`id`, `link`, `short`, `user`, `password`, `created`) VALUES (NULL, ?, ?, ?, ?, CURRENT_TIMESTAMP());", shortlinkToCreate.Link, shortlinkToCreate.Short, user.Id, shortlinkToCreate.Password)
 
 	defer db.Close()
 
