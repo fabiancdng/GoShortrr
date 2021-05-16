@@ -12,7 +12,7 @@ import (
 	"github.com/gofiber/storage/mysql"
 )
 
-// Storage for Fiber (mainly for sessions)
+// Session storage
 var storage = mysql.New(mysql.Config{
 	Host:     "127.0.0.1",
 	Port:     3306,
@@ -23,13 +23,44 @@ var storage = mysql.New(mysql.Config{
 	Reset:    false,
 })
 
-// Sessions
+// Session middleware
 var store = session.New(session.Config{
 	Storage:    storage,
 	Expiration: 24 * time.Hour * 30,
 })
 
 func RegisterUser(c *fiber.Ctx) error {
+	sessionCookie := c.Cookies("session_id")
+
+	// Check if request is authorized
+	if sessionCookie == "" {
+		return c.SendStatus(401)
+	} else {
+		// Check if user has sufficient permissions
+		sess, err := store.Get(c)
+
+		if err != nil {
+			log.Println(err)
+			return fiber.NewError(500)
+		}
+
+		username := sess.Get("username")
+
+		if username == nil {
+			return fiber.NewError(500, "invalid session")
+		}
+
+		user, err := database.GetUser(username.(string))
+
+		if err != nil {
+			return fiber.NewError(500, "invalid session")
+		}
+
+		if user.Role < 1 {
+			return fiber.NewError(401, "insufficient permissions")
+		}
+	}
+
 	user := new(models.User)
 	c.BodyParser(user)
 
@@ -63,7 +94,7 @@ func LoginUser(c *fiber.Ctx) error {
 	login := new(models.Login)
 	c.BodyParser(login)
 
-	user, err := database.GetUser(*login)
+	user, err := database.AuthUser(*login)
 
 	if err != nil {
 		return err
@@ -81,4 +112,36 @@ func LoginUser(c *fiber.Ctx) error {
 	defer sess.Save()
 
 	return c.SendStatus(200)
+}
+
+func GetUser(c *fiber.Ctx) error {
+	sessionCookie := c.Cookies("session_id")
+
+	if sessionCookie == "" {
+		return c.SendStatus(401)
+	} else {
+		sess, err := store.Get(c)
+
+		if err != nil {
+			log.Println(err)
+			return fiber.NewError(500)
+		}
+
+		username := sess.Get("username")
+
+		if username == nil {
+			return fiber.NewError(500, "invalid session")
+		}
+
+		user, err := database.GetUser(username.(string))
+
+		if err != nil {
+			return fiber.NewError(500, "invalid session")
+		}
+
+		return c.JSON(fiber.Map{
+			"username": user.Username,
+			"role":     user.Role,
+		})
+	}
 }

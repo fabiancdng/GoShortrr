@@ -70,7 +70,7 @@ func ValidateUser(user *models.User) int {
 	return 200
 }
 
-func GetUser(login models.Login) (models.User, error) {
+func AuthUser(login models.Login) (models.User, error) {
 	var user models.User
 
 	db := DBConnection()
@@ -102,6 +102,34 @@ func GetUser(login models.Login) (models.User, error) {
 		if match == true {
 			return user, nil
 		}
+	}
+
+	return user, fiber.NewError(500, "invalid user")
+}
+
+func GetUser(username string) (models.User, error) {
+	var user models.User
+
+	db := DBConnection()
+
+	result, err := db.Query("SELECT * FROM `users` WHERE `username` = ?", username)
+
+	if err != nil {
+		log.Println(err)
+	}
+
+	defer db.Close()
+
+	if result.Next() {
+		result.Scan(
+			&user.Id,
+			&user.Username,
+			&user.Password,
+			&user.Role,
+			&user.Created,
+		)
+
+		return user, nil
 	}
 
 	return user, fiber.NewError(500, "invalid user")

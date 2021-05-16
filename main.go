@@ -38,13 +38,14 @@ func main() {
 	})
 
 	// Routes for managing shortlinks
-	app.Get("/api/shortlink/get/:short", api.GetShortlink)
-	app.Post("/api/shortlink/create", api.CreateShortlink)
-	app.Delete("/api/shortlink/delete", api.DeleteShortlink)
+	app.Get("/api/shortlink/get/:short", api.GetShortlink)   // Route for fetching what's behind a shortlink
+	app.Post("/api/shortlink/create", api.CreateShortlink)   // Route for creating a shortlink
+	app.Delete("/api/shortlink/delete", api.DeleteShortlink) // Route for deleting a shortlink
 
 	// Routes for managing authentication / users
-	app.Post("/api/auth/login", api.LoginUser)
-	app.Post("/api/auth/register", api.RegisterUser)
+	app.Post("/api/auth/login", api.LoginUser)       // Route for checking user info and starting a session
+	app.Post("/api/auth/register", api.RegisterUser) // Route for creating a user
+	app.Post("/api/auth/user", api.GetUser)          // Route for retrieving user info on frontend
 
 	app.Listen(":4000")
 }
