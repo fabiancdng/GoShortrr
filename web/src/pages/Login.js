@@ -2,7 +2,6 @@ import { Button } from "@chakra-ui/button"
 import { Box, Flex, Heading } from "@chakra-ui/layout"
 import { FormControl, FormLabel, Input, Spinner } from '@chakra-ui/react'
 import { useState } from "react"
-import Header from "../components/Header"
 
 const Login = () => {
     const [username, setUsername] = useState('')
@@ -17,8 +16,6 @@ const Login = () => {
     }
 
     return (
-    <>
-        <Header />
         <Flex mt={10} width="full" flexDirection="column" align="center" justifyContent="center">
             <Box p={8} minW={{ base: "90%", md: "600px" }} borderWidth={1} borderRadius={8} boxShadow="lg">
                 <Box textAlign="center">
@@ -39,7 +36,6 @@ const Login = () => {
                 </Box>
             </Box>
         </Flex>
-    </>
     )
 }
 
