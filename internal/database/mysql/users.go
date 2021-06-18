@@ -1,19 +1,17 @@
-package database
+package mysql
 
 import (
 	"log"
 
 	"github.com/alexedwards/argon2id"
 	"github.com/fabiancdng/GoShortrr/internal/models"
+	_ "github.com/go-sql-driver/mysql"
 	"github.com/gofiber/fiber/v2"
 )
 
-func CreateUser(user *models.User) bool {
-	db := DBConnection()
-
-	_, err := db.Exec("INSERT INTO `users` (`user_id`, `username`, `password`, `role`, `created`) VALUES (NULL, ?, ?, ?, CURRENT_TIMESTAMP());", user.Username, user.Password, user.Role)
-
-	defer db.Close()
+// Create a user
+func (m *MySQL) CreateUser(user *models.User) bool {
+	_, err := m.db.Exec("INSERT INTO `users` (`user_id`, `username`, `password`, `role`, `created`) VALUES (NULL, ?, ?, ?, CURRENT_TIMESTAMP());", user.Username, user.Password, user.Role)
 
 	if err != nil {
 		log.Println("[CREATE USER]", err)
@@ -30,7 +28,8 @@ func CreateUser(user *models.User) bool {
 // 804 		Password too long
 // 805 		Username already taken
 
-func ValidateUser(user *models.User) int {
+// Validate whether or not a user is okay to be created
+func (m *MySQL) ValidateUser(user *models.User) int {
 	if len(user.Username) < 5 {
 		// Username too short
 		return 801
@@ -52,8 +51,7 @@ func ValidateUser(user *models.User) int {
 	}
 
 	// Check if username is already taken
-	db := DBConnection()
-	result, err := db.Query("SELECT * FROM `users` WHERE `username` = ?", user.Username)
+	result, err := m.db.Query("SELECT * FROM `users` WHERE `username` = ?", user.Username)
 
 	if err != nil {
 		log.Println(err)
@@ -64,24 +62,19 @@ func ValidateUser(user *models.User) int {
 		return 805
 	}
 
-	defer db.Close()
-
 	// User valid
 	return 200
 }
 
-func AuthUser(login models.Login) (models.User, error) {
+// Look up user and return if existing
+func (m *MySQL) AuthUser(login models.Login) (models.User, error) {
 	var user models.User
 
-	db := DBConnection()
-
-	result, err := db.Query("SELECT * FROM `users` WHERE `username` = ?", login.Username)
+	result, err := m.db.Query("SELECT * FROM `users` WHERE `username` = ?", login.Username)
 
 	if err != nil {
 		log.Println(err)
 	}
-
-	defer db.Close()
 
 	if result.Next() {
 		result.Scan(
@@ -107,18 +100,15 @@ func AuthUser(login models.Login) (models.User, error) {
 	return user, fiber.NewError(500, "invalid user")
 }
 
-func GetUser(username string) (models.User, error) {
+// Return a user without having to provide credentials
+func (m *MySQL) GetUser(username string) (models.User, error) {
 	var user models.User
 
-	db := DBConnection()
-
-	result, err := db.Query("SELECT * FROM `users` WHERE `username` = ?", username)
+	result, err := m.db.Query("SELECT * FROM `users` WHERE `username` = ?", username)
 
 	if err != nil {
 		log.Println(err)
 	}
-
-	defer db.Close()
 
 	if result.Next() {
 		result.Scan(

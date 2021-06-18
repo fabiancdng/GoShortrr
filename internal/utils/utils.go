@@ -26,8 +26,8 @@ func GenerateShort(length int) (string, error) {
 	return string(bytes), nil
 }
 
-func GetUserBySession(c *fiber.Ctx, store *session.Store, admin bool) (*models.User, error) {
-	sessionCookie := c.Cookies("session_id")
+func GetUserBySession(ctx *fiber.Ctx, db database.Middleware, store *session.Store, admin bool) (*models.User, error) {
+	sessionCookie := ctx.Cookies("session_id")
 	user := new(models.User)
 
 	// Check if request is authorized
@@ -35,7 +35,7 @@ func GetUserBySession(c *fiber.Ctx, store *session.Store, admin bool) (*models.U
 		return user, fiber.NewError(401, "no session")
 	} else {
 		// Check if user has sufficient permissions
-		sess, err := store.Get(c)
+		sess, err := store.Get(ctx)
 
 		if err != nil {
 			log.Println(err)
@@ -48,7 +48,7 @@ func GetUserBySession(c *fiber.Ctx, store *session.Store, admin bool) (*models.U
 			return user, fiber.NewError(401, "invalid session")
 		}
 
-		userDB, err := database.GetUser(username.(string))
+		userDB, err := db.GetUser(username.(string))
 		user = &userDB
 
 		if err != nil {
