@@ -11,3 +11,7 @@ mysql:
 webserver:
   # The address and port the webserver is supposed to bind to
   address_and_port: '127.0.0.1:4000'
+  # A token that you can provide in a request's authorization header to use the API without a session (cookie)
+  # In a future version, there'll be an option to create multiple access tokens on the web interface
+  # Read more: https://github.com/fabiancdng/GoShortrr/wiki/REST-API
+  api_access_token: ''

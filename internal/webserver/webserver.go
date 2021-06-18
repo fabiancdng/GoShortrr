@@ -78,17 +78,17 @@ func (ws *WebServer) registerHandlers() {
 	apiAuthGroup := apiGroup.Group("/auth")
 
 	// Routes for managing authentication / users
-	apiAuthGroup.Post("/api/auth/login", ws.loginUser)       // Route for checking user info and starting a session
-	apiAuthGroup.Post("/api/auth/register", ws.registerUser) // Route for creating a user
-	apiAuthGroup.Post("/api/auth/user", ws.getUser)          // Route for retrieving user info on frontend
+	apiAuthGroup.Post("/login", ws.loginUser)       // Route for checking user info and starting a session
+	apiAuthGroup.Post("/register", ws.registerUser) // Route for creating a user
+	apiAuthGroup.Post("/user", ws.getUser)          // Route for retrieving user info on frontend
 
 	// Sub-group that holds all routes starting with /api/shortlink/*
 	apiShortlinkGroup := apiGroup.Group("/shortlink")
 
 	// Routes for managing shortlinks
-	apiShortlinkGroup.Get("/api/shortlink/get/:short", ws.getShortlink)   // Route for looking up what's behind a shortlink
-	apiShortlinkGroup.Post("/api/shortlink/create", ws.createShortlink)   // Route for creating a shortlink
-	apiShortlinkGroup.Delete("/api/shortlink/delete", ws.deleteShortlink) // Route for deleting a shortlink
+	apiShortlinkGroup.Get("/get/:short", ws.getShortlink)   // Route for looking up what's behind a shortlink
+	apiShortlinkGroup.Post("/create", ws.createShortlink)   // Route for creating a shortlink
+	apiShortlinkGroup.Delete("/delete", ws.deleteShortlink) // Route for deleting a shortlink
 }
 
 // Run the Fiber webserver with all initialized routes

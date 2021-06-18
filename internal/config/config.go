@@ -19,6 +19,7 @@ type Config struct {
 
 	WebServer struct {
 		AddressAndPort string `yaml:"address_and_port"`
+		APIAccessToken string `yaml:"api_access_token"`
 	} `yaml:"webserver"`
 }
 
