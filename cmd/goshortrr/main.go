@@ -10,18 +10,28 @@
 package main
 
 import (
+	"github.com/fabiancdng/GoShortrr/internal/config"
 	"github.com/fabiancdng/GoShortrr/internal/database/mysql"
 	"github.com/fabiancdng/GoShortrr/internal/webserver"
 	_ "github.com/go-sql-driver/mysql"
 )
 
 func main() {
+	//////////////////////
+	//      CONFIG      //
+	//////////////////////
+
+	config, err := config.ParseConfig("./config/config.yml")
+	if err != nil {
+		panic(err)
+	}
+
 	///////////////////////
 	//      DATABASE     //
 	///////////////////////
 
 	db := new(mysql.MySQL)
-	if err := db.Open(); err != nil {
+	if err := db.Open(config); err != nil {
 		panic(err)
 	}
 
@@ -35,7 +45,7 @@ func main() {
 	//////////////////////
 
 	// Create WebServer
-	ws, err := webserver.NewWebServer(db)
+	ws, err := webserver.NewWebServer(db, config)
 	if err != nil {
 		panic(err)
 	}

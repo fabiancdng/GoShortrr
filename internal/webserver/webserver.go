@@ -3,6 +3,7 @@ package webserver
 import (
 	"time"
 
+	"github.com/fabiancdng/GoShortrr/internal/config"
 	"github.com/fabiancdng/GoShortrr/internal/database"
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/fiber/v2/middleware/monitor"
@@ -11,23 +12,24 @@ import (
 )
 
 type WebServer struct {
-	app   *fiber.App
-	store *session.Store
-	db    database.Middleware
+	app    *fiber.App
+	store  *session.Store
+	config *config.Config
+	db     database.Middleware
 }
 
 // Create and return a WebServer object
-func NewWebServer(db database.Middleware) (*WebServer, error) {
+func NewWebServer(db database.Middleware, config *config.Config) (*WebServer, error) {
 	// Initialize Fiber app and Session store
 	app := fiber.New()
 
 	// Session storage
 	var storage = mysql.New(mysql.Config{
-		Host:     "127.0.0.1",
-		Port:     3306,
-		Database: "goshortrr",
-		Username: "goshortrr",
-		Password: "5lVX97KMM9SbM6UH",
+		Host:     config.MySQL.Host,
+		Port:     config.MySQL.Port,
+		Database: config.MySQL.DB,
+		Username: config.MySQL.User,
+		Password: config.MySQL.Password,
 		Table:    "sessions",
 		Reset:    false,
 	})
@@ -40,9 +42,10 @@ func NewWebServer(db database.Middleware) (*WebServer, error) {
 
 	// Create WebServer object and inject dependencies
 	ws := &WebServer{
-		app:   app,
-		store: store,
-		db:    db,
+		app:    app,
+		store:  store,
+		config: config,
+		db:     db,
 	}
 
 	ws.registerHandlers()
@@ -83,7 +86,7 @@ func (ws *WebServer) registerHandlers() {
 	apiShortlinkGroup := apiGroup.Group("/shortlink")
 
 	// Routes for managing shortlinks
-	apiShortlinkGroup.Get("/api/shortlink/get/:short", ws.getShortlink)   // Route for fetching what's behind a shortlink
+	apiShortlinkGroup.Get("/api/shortlink/get/:short", ws.getShortlink)   // Route for looking up what's behind a shortlink
 	apiShortlinkGroup.Post("/api/shortlink/create", ws.createShortlink)   // Route for creating a shortlink
 	apiShortlinkGroup.Delete("/api/shortlink/delete", ws.deleteShortlink) // Route for deleting a shortlink
 }
@@ -91,7 +94,7 @@ func (ws *WebServer) registerHandlers() {
 // Run the Fiber webserver with all initialized routes
 func (ws *WebServer) RunWebServer() error {
 	// Run Fiber webserver
-	err := ws.app.Listen(":4000")
+	err := ws.app.Listen(ws.config.WebServer.AddressAndPort)
 	if err != nil {
 		return err
 	}

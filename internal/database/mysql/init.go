@@ -1,11 +1,18 @@
 package mysql
 
-import "database/sql"
+import (
+	"database/sql"
+	"fmt"
+	"strconv"
+
+	"github.com/fabiancdng/GoShortrr/internal/config"
+)
 
 // Create MySQL object
 // This implements the database.Middleware interface
 type MySQL struct {
-	db *sql.DB
+	db     *sql.DB
+	config *config.Config
 }
 
 // Make sure all tables exist in database
@@ -26,9 +33,20 @@ func (m *MySQL) Init() error {
 }
 
 // Open a database connection
-func (m *MySQL) Open() error {
+func (m *MySQL) Open(config *config.Config) error {
+	m.config = config
+
+	dbConfig := fmt.Sprintf(
+		"%s:%s@tcp(%s:%s)/%s?parseTime=true",
+		m.config.MySQL.User,
+		m.config.MySQL.Password,
+		m.config.MySQL.Host,
+		strconv.Itoa(m.config.MySQL.Port),
+		m.config.MySQL.DB,
+	)
+
 	var err error
-	m.db, err = sql.Open("mysql", "GoShortrr:5lVX97KMM9SbM6UH@tcp(127.0.0.1:3306)/goshortrr?parseTime=true")
+	m.db, err = sql.Open("mysql", dbConfig)
 
 	if err != nil {
 		panic("Can't establish MySQL connection.")

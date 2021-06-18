@@ -1,11 +1,14 @@
 package database
 
-import "github.com/fabiancdng/GoShortrr/internal/models"
+import (
+	"github.com/fabiancdng/GoShortrr/internal/config"
+	"github.com/fabiancdng/GoShortrr/internal/models"
+)
 
 // Define what functions a database middleware must provide
 type Middleware interface {
 	// Open a database connection
-	Open() error
+	Open(config *config.Config) error
 	// Make sure all tables exist in database
 	Init() error
 

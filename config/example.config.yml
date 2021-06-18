@@ -1,0 +1,13 @@
+# Rename this to 'config.yml' and fill your data in
+
+# Your MySQL credentials
+mysql:
+  host: localhost
+  port: 3306
+  user: YOUR_MYSQL_USER
+  password: YOUR_MYSQL_PASSWORD
+  db: YOUR_MYSQL_DB_NAME
+
+webserver:
+  # The address and port the webserver is supposed to bind to
+  address_and_port: '127.0.0.1:4000'
