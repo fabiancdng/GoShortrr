@@ -97,7 +97,7 @@ func (m *MySQL) AuthUser(login models.Login) (models.User, error) {
 		}
 	}
 
-	return user, fiber.NewError(500, "invalid user")
+	return user, fiber.NewError(401, "invalid user")
 }
 
 // Return a user without having to provide credentials
@@ -122,5 +122,5 @@ func (m *MySQL) GetUser(username string) (models.User, error) {
 		return user, nil
 	}
 
-	return user, fiber.NewError(500, "invalid user")
+	return user, fiber.NewError(401, "invalid user")
 }
