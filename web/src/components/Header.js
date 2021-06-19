@@ -8,11 +8,12 @@ const Header = () => {
     return (
         <Box textAlign="right" py={4} mr={5}>
         <Flex p={4}  justifyContent="space-between">
-            <Heading>GoShortrr</Heading>
+            <Heading size="lg">GoShortrr</Heading>
             <IconButton
             icon={colorMode === 'light' ? <MoonIcon /> : <SunIcon />}
             onClick={toggleColorMode}
             variant="ghost"
+            borderRadius={5}
             />
         </Flex>
         </Box>

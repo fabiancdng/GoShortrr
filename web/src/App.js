@@ -1,12 +1,29 @@
+import { useContext, useEffect } from 'react'
 import { Switch, Route, BrowserRouter } from 'react-router-dom'
-import { ChakraProvider } from "@chakra-ui/react"
 import Login from "./pages/Login"
 import Header from './components/Header'
+import UserOnlyRoute from './components/UserOnlyRoute'
+import { UserContext } from './context/UserContext'
 
 const App = () => {
+  const { username, setUsername, permissions, setPermissions, loggedIn, setLoggedIn } = useContext(UserContext)
+
+  useEffect(() => {
+    fetch('/api/auth/user', {
+      method: 'POST',
+      credentials: 'include'
+    })
+      .then(async res => {
+        if(res.status === 401) {
+          setLoggedIn(false)
+        } else {
+          console.log(await res.json())
+        }
+      })
+  }, [])
+
   return (
     <BrowserRouter>
-      <ChakraProvider>
         <div className="App">
           <Header />
           
@@ -15,13 +32,12 @@ const App = () => {
               <Login />
             </Route>
 
-            <Route path="/">
-              <p>Welcome!</p>
-            </Route>
+            <UserOnlyRoute loggedIn={loggedIn} path="/">
+              <p>Welcome, {username}!</p>
+            </UserOnlyRoute>
           </Switch>
 
         </div>
-      </ChakraProvider>
     </BrowserRouter>
   );
 }
