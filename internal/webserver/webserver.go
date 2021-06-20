@@ -1,10 +1,12 @@
 package webserver
 
 import (
+	"log"
 	"time"
 
 	"github.com/fabiancdng/GoShortrr/internal/config"
 	"github.com/fabiancdng/GoShortrr/internal/database"
+	"github.com/fabiancdng/GoShortrr/internal/models"
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/fiber/v2/middleware/monitor"
 	"github.com/gofiber/fiber/v2/middleware/session"
@@ -100,4 +102,46 @@ func (ws *WebServer) RunWebServer() error {
 	}
 
 	return nil
+}
+
+// More helper functions
+
+// Read the user's session and get their data from the database
+func (ws *WebServer) getUserBySession(ctx *fiber.Ctx, admin bool) (*models.User, error) {
+	sessionCookie := ctx.Cookies("session_id")
+	user := new(models.User)
+
+	// Check if request is authorized
+	if sessionCookie == "" {
+		return user, fiber.NewError(401, "no session")
+	} else {
+		// Check if user has sufficient permissions
+		sess, err := ws.store.Get(ctx)
+
+		if err != nil {
+			log.Println(err)
+			return user, fiber.NewError(500)
+		}
+
+		username := sess.Get("username")
+
+		if username == nil {
+			return user, fiber.NewError(401, "invalid session")
+		}
+
+		userDB, err := ws.db.GetUser(username.(string))
+		user = &userDB
+
+		if err != nil {
+			return user, fiber.NewError(401, "invalid session")
+		}
+
+		if admin == true {
+			if user.Role < 1 {
+				return user, fiber.NewError(401, "insufficient permissions")
+			}
+		}
+	}
+
+	return user, nil
 }

@@ -17,7 +17,7 @@ func (ws *WebServer) getShortlink(ctx *fiber.Ctx) error {
 }
 
 func (ws *WebServer) createShortlink(ctx *fiber.Ctx) error {
-	user, err := utils.GetUserBySession(ctx, ws.db, ws.store, false)
+	user, err := ws.getUserBySession(ctx, false)
 
 	if err != nil {
 		return err

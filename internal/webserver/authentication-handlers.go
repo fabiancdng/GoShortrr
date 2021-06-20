@@ -5,7 +5,6 @@ import (
 
 	"github.com/alexedwards/argon2id"
 	"github.com/fabiancdng/GoShortrr/internal/models"
-	"github.com/fabiancdng/GoShortrr/internal/utils"
 	"github.com/gofiber/fiber/v2"
 )
 
@@ -64,7 +63,7 @@ func (ws *WebServer) loginUser(ctx *fiber.Ctx) error {
 }
 
 func (ws *WebServer) getUser(ctx *fiber.Ctx) error {
-	user, err := utils.GetUserBySession(ctx, ws.db, ws.store, false)
+	user, err := ws.getUserBySession(ctx, false)
 
 	if err != nil {
 		return err
