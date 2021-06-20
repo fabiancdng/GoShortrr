@@ -6,16 +6,15 @@ const Header = () => {
     const { colorMode, toggleColorMode } = useColorMode();
 
     return (
-        <Box textAlign="right" py={4} mr={5}>
-        <Flex p={4}  justifyContent="space-between">
-            <Heading size="lg">GoShortrr</Heading>
-            <IconButton
-            icon={colorMode === 'light' ? <MoonIcon /> : <SunIcon />}
-            onClick={toggleColorMode}
-            variant="ghost"
-            borderRadius={5}
-            />
-        </Flex>
+        <Box position="absolute" top={0} right={0} textAlign="right" py={4} mr={5}>
+            <Flex p={4}  justifyContent="space-between">
+                <IconButton
+                    icon={colorMode === 'light' ? <MoonIcon /> : <SunIcon />}
+                    onClick={toggleColorMode}
+                    variant="outline"
+                    borderRadius={5}
+                />
+            </Flex>
         </Box>
     )
 }

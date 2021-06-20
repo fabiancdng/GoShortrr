@@ -1,9 +1,9 @@
 import { useContext, useEffect, useState } from 'react'
 import { Switch, Route, BrowserRouter, Redirect } from 'react-router-dom'
 import Login from "./pages/Login"
-import Header from './components/Header'
 import UserOnlyRoute from './components/UserOnlyRoute'
 import { UserContext } from './context/UserContext'
+import UserDashboard from './components/UserDashboard'
 
 const App = () => {
   const { username, setUsername, permissions, setPermissions, loggedIn, setLoggedIn } = useContext(UserContext)
@@ -34,11 +34,9 @@ const App = () => {
   return (
     <BrowserRouter>
         <div className="App">
-          <Header />
-          
           <Switch>
             <UserOnlyRoute loggedIn={loggedIn} path="/" exact>
-              <p>Welcome, {username}!</p>
+              <UserDashboard />
             </UserOnlyRoute>
 
             <Route path="/login" exact>
