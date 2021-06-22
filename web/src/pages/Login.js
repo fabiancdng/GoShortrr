@@ -1,9 +1,12 @@
 import { Button } from "@chakra-ui/button"
 import { Box, Flex, Heading } from "@chakra-ui/layout"
 import { FormControl, FormLabel, Input, Spinner, Text } from '@chakra-ui/react'
-import { useState } from "react"
+import { useContext, useState } from "react"
+import { UserContext } from '../context/UserContext'
 
 const Login = () => {
+    const { setLoggedIn, setPermissions } = useContext(UserContext)
+
     const [username, setUsername] = useState('')
     const [password, setPassword] = useState('')
     const [status, setStatus] = useState(0)
@@ -13,28 +16,37 @@ const Login = () => {
     // 3 = submitted but error
     // 4 = submitted and session created
 
-    const submitHandler = (e) => {
+    const submitHandler = async (e) => {
         e.preventDefault()
         setStatus(1)
         setUsername('')
         setPassword('')
 
-        fetch('/api/auth/login', {
+        var res = await fetch('/api/auth/login', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
             },
             body: JSON.stringify({username: username, password: password})
         })
-            .then(async res => {
-                if(res.status === 200) {
-                    setStatus(4)
-                } else if(res.status === 401) {
-                    setStatus(2)
-                } else {
-                    setStatus(3)
-                }
+
+        if(res.status === 200) {
+            setStatus(4)
+            res = await fetch('/api/auth/user', {
+                method: 'POST',
+                credentials: 'include'
             })
+
+            if(res.status === 401) {
+                setLoggedIn(false)
+            } else {
+                res = await res.json()
+                setLoggedIn(true)
+                setUsername(res.username)
+                setPermissions(res.role)
+            }
+        } else if(res.status === 401) setStatus(2)
+        else setStatus(3)
     }
 
     return (

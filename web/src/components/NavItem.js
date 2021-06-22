@@ -3,20 +3,17 @@ import {
     Flex,
     Text,
     Icon,
-    Link,
     Menu,
     MenuButton,
-    MenuList,
-    Button
 } from '@chakra-ui/react'
 
-export default function NavItem({ icon, title, description, active, navSize }) {
+export default function NavItem({ icon, title, description, active }) {
     return (
         <Flex
             mt={30}
             flexDir="column"
             w="100%"
-            alignItems={navSize == "small" ? "center" : "flex-start"}
+            alignItems="flex-start"
         >
             <Menu placement="right">
                 <MenuButton
@@ -28,7 +25,7 @@ export default function NavItem({ icon, title, description, active, navSize }) {
                 >
                     <Flex>
                         <Icon as={icon} fontSize="xl" color={active && "gray.800"} />
-                        <Text ml={5} display={navSize == "small" ? "none" : "flex"}>{title}</Text>
+                        <Text ml={5}>{title}</Text>
                     </Flex>
                 </MenuButton>
             </Menu>

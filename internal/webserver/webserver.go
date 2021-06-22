@@ -10,7 +10,6 @@ import (
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/fiber/v2/middleware/monitor"
 	"github.com/gofiber/fiber/v2/middleware/session"
-	"github.com/gofiber/storage/mysql"
 )
 
 type WebServer struct {
@@ -25,20 +24,8 @@ func NewWebServer(db database.Middleware, config *config.Config) (*WebServer, er
 	// Initialize Fiber app and Session store
 	app := fiber.New()
 
-	// Session storage
-	var storage = mysql.New(mysql.Config{
-		Host:     config.MySQL.Host,
-		Port:     config.MySQL.Port,
-		Database: config.MySQL.DB,
-		Username: config.MySQL.User,
-		Password: config.MySQL.Password,
-		Table:    "sessions",
-		Reset:    false,
-	})
-
 	// Session middleware
 	var store = session.New(session.Config{
-		Storage:    storage,
 		Expiration: 24 * time.Hour * 30,
 	})
 
