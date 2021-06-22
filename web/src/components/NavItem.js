@@ -7,7 +7,7 @@ import {
     MenuButton,
 } from '@chakra-ui/react'
 
-export default function NavItem({ icon, title, description, active }) {
+export default function NavItem({ icon, title, active, disabled }) {
     return (
         <Flex
             mt={30}
@@ -20,11 +20,13 @@ export default function NavItem({ icon, title, description, active }) {
                     backgroundColor={active && "gray.600"}
                     p={4}
                     borderRadius={8}
+                    color={disabled && 'gray.500'}
                     w="100%"
-                    _hover={{ textDecor: 'none' }}
+                    cursor={disabled ? 'not-allowed' : 'pointer'}
+                    _hover={{ textDecor: 'none', backgroundColor: `${!active && !disabled ? 'gray.700' : ''}`}}
                 >
                     <Flex>
-                        <Icon as={icon} fontSize="xl" color={active && "gray.800"} />
+                        <Icon as={icon} fontSize="xl"/>
                         <Text ml={5}>{title}</Text>
                     </Flex>
                 </MenuButton>
