@@ -18,9 +18,9 @@ type WebServer struct {
 	db     database.Middleware
 }
 
-// Create and return a WebServer object
+// Creates, sets up and returns a WebServer
 func NewWebServer(db database.Middleware, config *config.Config) (*WebServer, error) {
-	// Initialize Fiber app and Session store
+	// Initializes Fiber app and Session store
 	app := fiber.New()
 
 	// Session middleware
@@ -28,7 +28,7 @@ func NewWebServer(db database.Middleware, config *config.Config) (*WebServer, er
 		Expiration: 24 * time.Hour * 30,
 	})
 
-	// Create WebServer object and inject dependencies
+	// Creates WebServer and injects dependencies
 	ws := &WebServer{
 		app:    app,
 		store:  store,
@@ -36,25 +36,28 @@ func NewWebServer(db database.Middleware, config *config.Config) (*WebServer, er
 		db:     db,
 	}
 
-	ws.registerHandlers()
+	ws.setup()
 
-	// Return created WebServer object
+	// Returns created WebServer object
 	return ws, nil
 }
 
-// Register all routes and their handler functions
-func (ws *WebServer) registerHandlers() {
-	// +++++++++ STATIC ++++++++++++++++++
+// Registers all routes and their handler functions
+func (ws *WebServer) setup() {
+	////////////////////
+	//     STATIC     //
+	////////////////////
 
-	// Serve production build of React app
+	// Serves production build of React app
 	ws.app.Static("/*", "./web/build")
-
-	// Serve server monitor from Fiber middleware
+	// Serves server monitor from Fiber middleware
 	ws.app.Get("/monitor", monitor.New())
 
-	// +++++++++ API ++++++++++++++++++
+	/////////////////
+	//     API     //
+	/////////////////
 
-	// Group that holds all routes starting with /api/*
+	// Router that holds all routes starting with /api/*
 	apiGroup := ws.app.Group("/api")
 
 	// Route for testing purposes
@@ -62,22 +65,19 @@ func (ws *WebServer) registerHandlers() {
 		return c.SendString("Pong! 👋")
 	})
 
-	// Sub-group that holds all routes starting with /api/auth/*
+	// Router that holds all routes starting with /api/auth/*
 	apiAuthGroup := apiGroup.Group("/auth")
 	new(controllers.AuthenticationController).Register(ws.db, ws.store, apiAuthGroup)
 
-	// Sub-group that holds all routes starting with /api/shortlink/*
+	// Router that holds all routes starting with /api/shortlink/*
 	apiShortlinkGroup := apiGroup.Group("/shortlink")
+	new(controllers.ShortlinkController).Register(ws.db, ws.store, apiShortlinkGroup)
 
-	// Routes for managing shortlinks
-	apiShortlinkGroup.Get("/get/:short", ws.getShortlink)   // Route for looking up what's behind a shortlink
-	apiShortlinkGroup.Post("/create", ws.createShortlink)   // Route for creating a shortlink
-	apiShortlinkGroup.Delete("/delete", ws.deleteShortlink) // Route for deleting a shortlink
 }
 
-// Run the Fiber webserver with all initialized routes
+// Runs the webserver
 func (ws *WebServer) RunWebServer() error {
-	// Run Fiber webserver
+	// Runs the Fiber webserver
 	err := ws.app.Listen(ws.config.WebServer.AddressAndPort)
 	if err != nil {
 		return err

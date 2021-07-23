@@ -11,6 +11,5 @@ import (
 // It also holds the handler functions for that part
 type Controller interface {
 	// Register registers a controller to the passed fiber.Router
-	// which typically is a so called 'group'
 	Register(db database.Middleware, store *session.Store, router fiber.Router)
 }
