@@ -6,7 +6,6 @@ require (
 	github.com/alexedwards/argon2id v0.0.0-20210511081203-7d35d68092b8
 	github.com/go-sql-driver/mysql v1.6.0
 	github.com/gofiber/fiber/v2 v2.20.2
-	github.com/gofiber/storage/mysql v0.0.0-20210602124502-f0233feaea00
 	gopkg.in/yaml.v2 v2.4.0
 )
 

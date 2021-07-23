@@ -1,6 +1,8 @@
 package webserver
 
 import (
+	"log"
+
 	"github.com/fabiancdng/GoShortrr/internal/models"
 	"github.com/fabiancdng/GoShortrr/internal/utils"
 	"github.com/gofiber/fiber/v2"
@@ -17,10 +19,20 @@ func (ws *WebServer) getShortlink(ctx *fiber.Ctx) error {
 }
 
 func (ws *WebServer) createShortlink(ctx *fiber.Ctx) error {
-	user, err := ws.getUserBySession(ctx, false)
-
+	sess, err := ws.store.Get(ctx)
 	if err != nil {
-		return err
+		log.Println(err)
+		return fiber.NewError(500)
+	}
+
+	username := sess.Get("username")
+	if username == nil {
+		return fiber.NewError(401, "invalid session")
+	}
+
+	user, err := ws.db.GetUser(username.(string))
+	if err != nil {
+		return fiber.NewError(401, "invalid session")
 	}
 
 	shortlinkToCreate := new(models.ShortlinkToCreate)

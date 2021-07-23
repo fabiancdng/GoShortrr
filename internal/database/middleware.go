@@ -21,9 +21,9 @@ type Middleware interface {
 	// Validate whether or not a user is okay to be created
 	ValidateUser(user *models.User) int
 	// Look up user (using credentials) and return if existing
-	AuthUser(login models.Login) (models.User, error)
+	AuthUser(login models.Login) (*models.User, error)
 	// Return a user without having to provide credentials
-	GetUser(username string) (models.User, error)
+	GetUser(username string) (*models.User, error)
 
 	/////////////////////
 	//    SHORTLINKS   //

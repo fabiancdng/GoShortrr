@@ -67,8 +67,8 @@ func (m *MySQL) ValidateUser(user *models.User) int {
 }
 
 // Look up user and return if existing
-func (m *MySQL) AuthUser(login models.Login) (models.User, error) {
-	var user models.User
+func (m *MySQL) AuthUser(login models.Login) (*models.User, error) {
+	user := new(models.User)
 
 	result, err := m.db.Query("SELECT * FROM `users` WHERE `username` = ?", login.Username)
 
@@ -101,8 +101,8 @@ func (m *MySQL) AuthUser(login models.Login) (models.User, error) {
 }
 
 // Return a user without having to provide credentials
-func (m *MySQL) GetUser(username string) (models.User, error) {
-	var user models.User
+func (m *MySQL) GetUser(username string) (*models.User, error) {
+	user := new(models.User)
 
 	result, err := m.db.Query("SELECT * FROM `users` WHERE `username` = ?", username)
 
