@@ -39,8 +39,8 @@ export default function Sidebar() {
                 alignItems="center"
                 justifyContent="center"
             >
-                <Heading textAlign="center">🔗</Heading>
-                <Heading mt={5} size="lg" textAlign="center">GoShortrr</Heading>
+                <img width="40%" src="/goshortrr-logo-bg-circle.png" />
+                <Heading mt={8} size="lg" textAlign="center">GoShortrr</Heading>
             </Flex>
 
             <Flex
