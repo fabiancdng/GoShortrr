@@ -39,7 +39,7 @@ export default function Sidebar() {
                 alignItems="center"
                 justifyContent="center"
             >
-                <img width="40%" src="/goshortrr-logo-bg-circle.png" />
+                <img width="30%" alt="GoShortrr logo" src="/goshortrr-logo-bg-circle.png" />
                 <Heading mt={8} size="lg" textAlign="center">GoShortrr</Heading>
             </Flex>
 

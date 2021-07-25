@@ -9,7 +9,7 @@ const UserDashboard = () => {
             <Sidebar />
             <Flex flexDir="column" alignItems="center" width="100%" mt={10}>
                 <Heading width="90%">Good evening, Fabian.</Heading>
-                <Box mt={15} width="80%" height="min" p={8} borderWidth={1} borderRadius={8} boxShadow="lg">
+                <Box mt={10} width="80%" height="min" p={8} borderWidth={1} borderRadius={8} boxShadow="lg">
                     <Heading size="lg">Quickly create a shortlink</Heading>
                     <Text mt={0.5} pl={0.5} size="xs"><b>Paste. Click the button. Done.</b></Text>
                     <HStack mt={3}>

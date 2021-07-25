@@ -10,7 +10,7 @@ import {
 export default function NavItem({ icon, title, active, disabled }) {
     return (
         <Flex
-            mt={30}
+            mt={3}
             flexDir="column"
             w="100%"
             alignItems="flex-start"
@@ -18,7 +18,7 @@ export default function NavItem({ icon, title, active, disabled }) {
             <Menu placement="right">
                 <MenuButton
                     backgroundColor={active && "gray.600"}
-                    p={4}
+                    p={3}
                     borderRadius={8}
                     color={disabled && 'gray.500'}
                     w="100%"
