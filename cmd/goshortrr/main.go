@@ -35,7 +35,7 @@ func main() {
 		panic(err)
 	}
 
-	// Make sure all tables exist in database
+	// Makes sure all tables exist in database
 	if err := db.Init(); err != nil {
 		panic(err)
 	}
@@ -44,13 +44,13 @@ func main() {
 	//     WEBSERVER    //
 	//////////////////////
 
-	// Create WebServer
+	// Creates WebServer
 	ws, err := webserver.NewWebServer(db, config)
 	if err != nil {
 		panic(err)
 	}
 
-	// Run WebServer
+	// Runs WebServer
 	err = ws.RunWebServer()
 	if err != nil {
 		panic(err)

@@ -9,7 +9,7 @@ import (
 	"github.com/gofiber/fiber/v2"
 )
 
-// Create a user
+// Creates a user
 func (m *MySQL) CreateUser(user *models.User) bool {
 	_, err := m.db.Exec("INSERT INTO `users` (`user_id`, `username`, `password`, `role`, `created`) VALUES (NULL, ?, ?, ?, CURRENT_TIMESTAMP());", user.Username, user.Password, user.Role)
 
@@ -28,7 +28,7 @@ func (m *MySQL) CreateUser(user *models.User) bool {
 // 804 		Password too long
 // 805 		Username already taken
 
-// Validate whether or not a user is okay to be created
+// Validates whether or not a user is okay to be created
 func (m *MySQL) ValidateUser(user *models.User) int {
 	if len(user.Username) < 5 {
 		// Username too short
@@ -50,7 +50,7 @@ func (m *MySQL) ValidateUser(user *models.User) int {
 		return 804
 	}
 
-	// Check if username is already taken
+	// Checks if username is already taken
 	result, err := m.db.Query("SELECT * FROM `users` WHERE `username` = ?", user.Username)
 
 	if err != nil {
@@ -66,7 +66,7 @@ func (m *MySQL) ValidateUser(user *models.User) int {
 	return 200
 }
 
-// Look up user and return if existing
+// Looks up and returns a user
 func (m *MySQL) AuthUser(login models.Login) (*models.User, error) {
 	user := new(models.User)
 
@@ -100,7 +100,7 @@ func (m *MySQL) AuthUser(login models.Login) (*models.User, error) {
 	return user, fiber.NewError(401, "invalid user")
 }
 
-// Return a user without having to provide credentials
+// Returns a user without having to provide credentials
 func (m *MySQL) GetUser(username string) (*models.User, error) {
 	user := new(models.User)
 

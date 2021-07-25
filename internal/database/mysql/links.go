@@ -7,7 +7,7 @@ import (
 	"github.com/gofiber/fiber/v2"
 )
 
-// Create a shortlink
+// Creates a shortlink
 func (m *MySQL) CreateShortlink(shortlinkToCreate *models.ShortlinkToCreate, user *models.User) bool {
 	_, err := m.db.Exec("INSERT INTO `shortlinks` (`id`, `link`, `short`, `user`, `password`, `created`) VALUES (NULL, ?, ?, ?, ?, CURRENT_TIMESTAMP());", shortlinkToCreate.Link, shortlinkToCreate.Short, user.Id, shortlinkToCreate.Password)
 
@@ -19,7 +19,7 @@ func (m *MySQL) CreateShortlink(shortlinkToCreate *models.ShortlinkToCreate, use
 	return true
 }
 
-// Validate whether or not a shortlink is okay to be created
+// Validates whether or not a shortlink is okay to be created
 func (m *MySQL) ValidateShortlink(short string) bool {
 	if short == "" {
 		// Shortlink can't be empty
@@ -31,7 +31,7 @@ func (m *MySQL) ValidateShortlink(short string) bool {
 		return false
 	}
 
-	// Check if shortlink is already taken
+	// Checks if shortlink is already taken
 	result, err := m.db.Query("SELECT * FROM `shortlinks` WHERE `short` = ?", short)
 
 	if err != nil {
@@ -47,7 +47,7 @@ func (m *MySQL) ValidateShortlink(short string) bool {
 	return true
 }
 
-// Get a shortlink
+// Returns what's behind a shortlink
 func (m *MySQL) GetShortlink(short string) (models.Shortlink, error) {
 	var shortlink models.Shortlink
 	var shortlinkPassword string

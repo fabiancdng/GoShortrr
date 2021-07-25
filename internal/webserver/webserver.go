@@ -66,12 +66,12 @@ func (ws *WebServer) setup() {
 	})
 
 	// Router that holds all routes starting with /api/auth/*
-	apiAuthGroup := apiGroup.Group("/auth")
-	new(controllers.AuthenticationController).Register(ws.db, ws.store, apiAuthGroup)
+	apiAuthRouter := apiGroup.Group("/auth")
+	new(controllers.AuthenticationController).Register(ws.db, ws.store, apiAuthRouter)
 
 	// Router that holds all routes starting with /api/shortlink/*
-	apiShortlinkGroup := apiGroup.Group("/shortlink")
-	new(controllers.ShortlinkController).Register(ws.db, ws.store, apiShortlinkGroup)
+	apiShortlinkRouter := apiGroup.Group("/shortlink")
+	new(controllers.ShortlinkController).Register(ws.db, ws.store, apiShortlinkRouter)
 
 }
 
