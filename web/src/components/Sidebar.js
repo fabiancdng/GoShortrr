@@ -24,8 +24,8 @@ export default function Sidebar() {
     return (
         <Flex
             display={navSize === 'small' ? 'none' : 'flex'}
-            pos="sticky"
             left="5"
+            pos="fixed"
             h="95vh"
             pr={5}
             marginTop="2.5vh"
