@@ -10,22 +10,26 @@ const App = () => {
   // True if the API hasn't responded yet (to the /auth/user request)
   const [pending, setPending] = useState(true)
 
-  useEffect(async () => {
-    var res = await fetch('/api/auth/user', {
-      method: 'POST',
-      credentials: 'include'
-    })
-    
-    if(res.status === 401) {
-          setLoggedIn(false)
-          setPending(false)
-    } else {
-      res = await res.json()
-      setLoggedIn(true)
-      setUsername(res.username)
-      setPermissions(res.role)
-      setPending(false)
+  useEffect(() => {
+    const fetchUserData = async () => {
+      var res = await fetch('/api/auth/user', {
+        method: 'POST',
+        credentials: 'include'
+      })
+      
+      if(res.status === 401) {
+            setLoggedIn(false)
+            setPending(false)
+      } else {
+        res = await res.json()
+        setLoggedIn(true)
+        setUsername(res.username)
+        setPermissions(res.role)
+        setPending(false)
+      }
     }
+
+    fetchUserData()
   }, [])
 
   if(pending) return null
