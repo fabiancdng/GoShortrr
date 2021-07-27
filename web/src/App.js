@@ -39,7 +39,7 @@ const App = () => {
         <div className="App">
           <Switch>
             <UserOnlyRoute loggedIn={loggedIn} path="/" exact>
-              <UserDashboard />
+              <UserDashboard username={username} />
             </UserOnlyRoute>
 
             <Route path="/login" exact>
