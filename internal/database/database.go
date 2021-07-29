@@ -6,7 +6,7 @@ import (
 )
 
 // Defines what functions a database middleware must provide
-type Middleware interface {
+type Database interface {
 	// Opens a database connection
 	Open(config *config.Config) error
 	// Makes sure all tables exist in database
@@ -20,9 +20,7 @@ type Middleware interface {
 	CreateUser(user *models.User) bool
 	// Validates whether or not a user is okay to be created
 	ValidateUser(user *models.User) int
-	// Looks up user (using credentials) and return if existing
-	AuthUser(login models.Login) (*models.User, error)
-	// Returns a user without having to provide credentials
+	// Obtains a user from the database by their username
 	GetUser(username string) (*models.User, error)
 
 	/////////////////////

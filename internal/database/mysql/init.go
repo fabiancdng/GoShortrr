@@ -9,7 +9,7 @@ import (
 )
 
 // MySQL database middleware
-// This implements the database.Middleware interface
+// This implements the database.Database interface
 type MySQL struct {
 	db     *sql.DB
 	config *config.Config

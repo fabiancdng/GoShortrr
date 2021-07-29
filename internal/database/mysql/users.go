@@ -3,7 +3,6 @@ package mysql
 import (
 	"log"
 
-	"github.com/alexedwards/argon2id"
 	"github.com/fabiancdng/GoShortrr/internal/models"
 	_ "github.com/go-sql-driver/mysql"
 	"github.com/gofiber/fiber/v2"
@@ -66,41 +65,7 @@ func (m *MySQL) ValidateUser(user *models.User) int {
 	return 200
 }
 
-// Looks up and returns a user
-func (m *MySQL) AuthUser(login models.Login) (*models.User, error) {
-	user := new(models.User)
-
-	result, err := m.db.Query("SELECT * FROM `users` WHERE `username` = ?", login.Username)
-
-	if err != nil {
-		log.Println(err)
-	}
-
-	if result.Next() {
-		result.Scan(
-			&user.Id,
-			&user.Username,
-			&user.Password,
-			&user.Role,
-			&user.Created,
-		)
-
-		match, err := argon2id.ComparePasswordAndHash(login.Password, user.Password)
-
-		if err != nil {
-			log.Println(err)
-			return user, fiber.NewError(500)
-		}
-
-		if match == true {
-			return user, nil
-		}
-	}
-
-	return user, fiber.NewError(401, "invalid user")
-}
-
-// Returns a user without having to provide credentials
+// Obtains a user from the database by their username
 func (m *MySQL) GetUser(username string) (*models.User, error) {
 	user := new(models.User)
 

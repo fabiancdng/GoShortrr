@@ -13,11 +13,11 @@ import (
 // The controller for handling all requests to /api/auth/*
 // These routes are for managing authentication/users
 type AuthenticationController struct {
-	db    database.Middleware
+	db    database.Database
 	store *session.Store
 }
 
-func (controller *AuthenticationController) Register(db database.Middleware, store *session.Store, router fiber.Router) {
+func (controller *AuthenticationController) Register(db database.Database, store *session.Store, router fiber.Router) {
 	controller.db = db
 	controller.store = store
 
@@ -63,7 +63,7 @@ func (controller *AuthenticationController) loginUser(ctx *fiber.Ctx) error {
 	login := new(models.Login)
 	ctx.BodyParser(login)
 
-	user, err := controller.db.AuthUser(*login)
+	user, err := controller.db.GetUser(login.Username)
 
 	if err != nil {
 		return err
@@ -84,21 +84,12 @@ func (controller *AuthenticationController) loginUser(ctx *fiber.Ctx) error {
 }
 
 func (controller *AuthenticationController) getUser(ctx *fiber.Ctx) error {
-	sess, err := controller.store.Get(ctx)
-	if err != nil {
-		log.Println(err)
-		return fiber.NewError(500)
+	if ctx.Locals("authorized") == false {
+		return fiber.NewError(401)
 	}
 
-	username := sess.Get("username")
-	if username == nil {
-		return fiber.NewError(401, "invalid session")
-	}
-
-	user, err := controller.db.GetUser(username.(string))
-	if err != nil {
-		return fiber.NewError(401, "invalid session")
-	}
+	// Gets user from the request's locals
+	user := ctx.Locals("user").(*models.User)
 
 	return ctx.JSON(fiber.Map{
 		"username": user.Username,

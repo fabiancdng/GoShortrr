@@ -10,5 +10,5 @@ import (
 // for a specific part of the API (for instance /api/auth/*)
 type Controller interface {
 	// Register registers a controller's routes and handlers to the passed fiber.Router
-	Register(db database.Middleware, store *session.Store, router fiber.Router)
+	Register(db database.Database, store *session.Store, router fiber.Router)
 }

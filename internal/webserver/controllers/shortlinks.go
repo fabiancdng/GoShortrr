@@ -1,8 +1,6 @@
 package controllers
 
 import (
-	"log"
-
 	"github.com/fabiancdng/GoShortrr/internal/database"
 	"github.com/fabiancdng/GoShortrr/internal/models"
 	"github.com/fabiancdng/GoShortrr/internal/utils"
@@ -13,11 +11,11 @@ import (
 // The controller for handling all requests to /api/shortlink/*
 // These routes are for managing shortlinks
 type ShortlinkController struct {
-	db    database.Middleware
+	db    database.Database
 	store *session.Store
 }
 
-func (controller *ShortlinkController) Register(db database.Middleware, store *session.Store, router fiber.Router) {
+func (controller *ShortlinkController) Register(db database.Database, store *session.Store, router fiber.Router) {
 	controller.db = db
 	controller.store = store
 
@@ -42,21 +40,12 @@ func (controller *ShortlinkController) getShortlink(ctx *fiber.Ctx) error {
 
 // Creates a shortlink
 func (controller *ShortlinkController) createShortlink(ctx *fiber.Ctx) error {
-	sess, err := controller.store.Get(ctx)
-	if err != nil {
-		log.Println(err)
-		return fiber.NewError(500)
+	if ctx.Locals("authorized") == false {
+		return fiber.NewError(401)
 	}
 
-	username := sess.Get("username")
-	if username == nil {
-		return fiber.NewError(401, "invalid session")
-	}
-
-	user, err := controller.db.GetUser(username.(string))
-	if err != nil {
-		return fiber.NewError(401, "invalid session")
-	}
+	// Gets user from the request's locals
+	user := ctx.Locals("user").(*models.User)
 
 	shortlinkToCreate := new(models.ShortlinkToCreate)
 	ctx.BodyParser(shortlinkToCreate)
