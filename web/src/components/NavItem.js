@@ -10,7 +10,7 @@ import {
 export default function NavItem({ icon, title, active, disabled }) {
     return (
         <Flex
-            mt={3}
+            mt={5}
             flexDir="column"
             w="100%"
             alignItems="flex-start"

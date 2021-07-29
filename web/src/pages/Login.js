@@ -51,6 +51,16 @@ const Login = () => {
 
     return (
         <Flex mt={10} width="full" flexDirection="column" align="center" justifyContent="center">
+            <Flex
+                mt={15}
+                mb={35}
+                flexDir="column"
+                alignItems="center"
+                justifyContent="center"
+            >
+                <img width="30%" alt="GoShortrr logo" src="/goshortrr-logo-bg-circle.png" />
+            </Flex>
+
             <Box p={8} minW={{ base: "90%", md: "600px" }} borderWidth={1} borderRadius={8} boxShadow="lg">
                 <Box textAlign="center">
                     <Heading>Login</Heading>

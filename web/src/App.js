@@ -3,7 +3,8 @@ import { Switch, Route, BrowserRouter, Redirect } from 'react-router-dom'
 import Login from "./pages/Login"
 import UserOnlyRoute from './components/UserOnlyRoute'
 import { UserContext } from './context/UserContext'
-import UserDashboard from './components/UserDashboard'
+import UserDashboard from './pages/UserDashboard'
+import ShortlinkRedirect from './pages/ShortlinkRedirect'
 
 const App = () => {
   const { username, setUsername, permissions, setPermissions, loggedIn, setLoggedIn } = useContext(UserContext)
@@ -44,6 +45,10 @@ const App = () => {
 
             <Route path="/login" exact>
               {loggedIn ? <Redirect to="/" /> : <Login />}
+            </Route>
+
+            <Route path="/">
+              <ShortlinkRedirect />
             </Route>
           </Switch>
 

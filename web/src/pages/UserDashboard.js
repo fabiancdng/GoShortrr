@@ -1,8 +1,8 @@
 import { Flex, Heading } from "@chakra-ui/react"
-import CreateShortlink from "./CreateShortlink"
-import DeleteShortlink from "./DeleteShortlink"
-import LookupShortlink from "./LookupShortlink"
-import Sidebar from "./Sidebar"
+import CreateShortlink from "../components/CreateShortlink"
+import DeleteShortlink from "../components/DeleteShortlink"
+import LookupShortlink from "../components/LookupShortlink"
+import Sidebar from "../components/Sidebar"
 
 const UserDashboard = ({ username }) => {
     const getTimeGreeting = () => {
