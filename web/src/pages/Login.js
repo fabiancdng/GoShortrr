@@ -5,10 +5,10 @@ import { useContext, useState } from "react"
 import { UserContext } from '../context/UserContext'
 
 const Login = () => {
-    const { setLoggedIn, setPermissions } = useContext(UserContext)
+    const { setUsername, setLoggedIn, setPermissions } = useContext(UserContext)
 
-    const [username, setUsername] = useState('')
-    const [password, setPassword] = useState('')
+    const [usernameInput, setUsernameInput] = useState('')
+    const [passwordInput, setPasswordInput] = useState('')
     const [status, setStatus] = useState(0)
     // 0 = unsubmitted
     // 1 = submitted but no response yet
@@ -19,15 +19,15 @@ const Login = () => {
     const submitHandler = async (e) => {
         e.preventDefault()
         setStatus(1)
-        setUsername('')
-        setPassword('')
+        setUsernameInput('')
+        setPasswordInput('')
 
         var res = await fetch('/api/auth/login', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
             },
-            body: JSON.stringify({username: username, password: password})
+            body: JSON.stringify({username: usernameInput, password: passwordInput})
         })
 
         if(res.status === 200) {
@@ -60,11 +60,11 @@ const Login = () => {
                     {status === 2 ? <Text textAlign="center" my={5} color="red">Invalid username or password.</Text> : status === 3 && <Text my={5} textAlign="center" color="red">Internal Server Error! Please try again later.</Text>}
                     <FormControl>
                         <FormLabel>Username</FormLabel>
-                        <Input value={username} type="text" placeholder="Your username" onChange={e => setUsername(e.target.value)} />
+                        <Input value={usernameInput} type="text" placeholder="Your username" onChange={e => setUsernameInput(e.target.value)} />
                     </FormControl>
                     <FormControl mt={6}>
                         <FormLabel>Password</FormLabel>
-                        <Input value={password} type="password" placeholder="Your password" onChange={e => setPassword(e.target.value)} />
+                        <Input value={passwordInput} type="password" placeholder="Your password" onChange={e => setPasswordInput(e.target.value)} />
                     </FormControl>
                     {status === 1 ? <Button disabled={true} width="full" mt={4} type="submit"><Spinner mr={3} /> Signing in...</Button> : <Button width="full" mt={4} type="submit">Sign In</Button>}
                     </form>

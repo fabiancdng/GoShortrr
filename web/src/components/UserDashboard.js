@@ -8,9 +8,9 @@ const UserDashboard = ({ username }) => {
     const getTimeGreeting = () => {
         var currentTime = new Date().getHours()
 
-        if(currentTime < 12) return "Good morning, "
-        if(currentTime < 18) return "Good afternoon, "
-        if(currentTime < 23) return "Good evening, "
+        if(currentTime < 12) return "Good morning"
+        if(currentTime < 18) return "Good afternoon"
+        if(currentTime < 23) return "Good evening"
         return "Good night, "
     }
 
@@ -21,7 +21,7 @@ const UserDashboard = ({ username }) => {
         <Flex>
             <Sidebar />
             <Flex flexDir="column" alignItems="center" width="100%" mt={10} ml="280px">
-                <Heading width="90%">{timeGreeting} {username}.</Heading>
+                <Heading width="90%">{timeGreeting}, {username}.</Heading>
 
                 <CreateShortlink />
                 <LookupShortlink />

@@ -18,8 +18,8 @@ const App = () => {
       })
       
       if(res.status === 401) {
-            setLoggedIn(false)
-            setPending(false)
+        setLoggedIn(false)
+        setPending(false)
       } else {
         res = await res.json()
         setLoggedIn(true)
