@@ -2,6 +2,7 @@ package config
 
 import (
 	"fmt"
+	"log"
 	"os"
 
 	"gopkg.in/yaml.v2"
@@ -54,5 +55,6 @@ func ParseConfig(path string) (*Config, error) {
 		return nil, err
 	}
 
+	log.Println(">> Config has been parsed successfully!")
 	return config, nil
 }

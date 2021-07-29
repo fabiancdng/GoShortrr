@@ -30,25 +30,37 @@ func (controller *AuthenticationController) Register(db database.Database, store
 }
 
 func (controller *AuthenticationController) registerUser(ctx *fiber.Ctx) error {
-	user := new(models.User)
-	ctx.BodyParser(user)
+	if ctx.Locals("authorized") == false {
+		return fiber.NewError(401)
+	}
 
-	statusValid := controller.db.ValidateUser(user)
+	// Gets user from the request's locals
+	user := ctx.Locals("user").(*models.User)
+
+	// Returns an error if user doesn't have admin permissions
+	if user.Role != 1 {
+		return fiber.NewError(401, "insufficient permissions")
+	}
+
+	userToRegister := new(models.User)
+	ctx.BodyParser(userToRegister)
+
+	statusValid := controller.db.ValidateUser(userToRegister)
 
 	if statusValid != 200 {
 		// User is not valid
 		return ctx.SendStatus(statusValid)
 	}
 
-	hash, err := argon2id.CreateHash(user.Password, argon2id.DefaultParams)
+	hash, err := argon2id.CreateHash(userToRegister.Password, argon2id.DefaultParams)
 
 	if err != nil {
 		return ctx.SendStatus(500)
 	}
 
-	user.Password = hash
+	userToRegister.Password = hash
 
-	statusCreate := controller.db.CreateUser(user)
+	statusCreate := controller.db.CreateUser(userToRegister)
 
 	if statusCreate == true {
 		// User has successfully been created

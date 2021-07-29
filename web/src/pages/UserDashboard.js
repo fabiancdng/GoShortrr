@@ -11,7 +11,7 @@ const UserDashboard = ({ username }) => {
         if(currentTime < 12) return "Good morning"
         if(currentTime < 18) return "Good afternoon"
         if(currentTime < 23) return "Good evening"
-        return "Good night, "
+        return "Good night"
     }
 
     const timeGreeting = getTimeGreeting()

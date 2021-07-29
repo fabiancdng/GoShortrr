@@ -1,6 +1,7 @@
 package webserver
 
 import (
+	"log"
 	"time"
 
 	"github.com/fabiancdng/GoShortrr/internal/config"
@@ -8,6 +9,7 @@ import (
 	"github.com/fabiancdng/GoShortrr/internal/webserver/controllers"
 	"github.com/fabiancdng/GoShortrr/internal/webserver/middlewares"
 	"github.com/gofiber/fiber/v2"
+	"github.com/gofiber/fiber/v2/middleware/logger"
 	"github.com/gofiber/fiber/v2/middleware/monitor"
 	"github.com/gofiber/fiber/v2/middleware/session"
 )
@@ -22,7 +24,9 @@ type WebServer struct {
 // Creates, sets up and returns a WebServer
 func NewWebServer(db database.Database, config *config.Config) (*WebServer, error) {
 	// Initializes Fiber app and Session store
-	app := fiber.New()
+	app := fiber.New(fiber.Config{
+		DisableStartupMessage: true,
+	})
 
 	// Session middleware
 	var store = session.New(session.Config{
@@ -54,6 +58,9 @@ func (ws *WebServer) setup() {
 	// Serves server monitor from Fiber middleware
 	ws.app.Get("/monitor", monitor.New())
 
+	// Registers logging middleware
+	ws.app.Use(logger.New())
+
 	/////////////////
 	//     API     //
 	/////////////////
@@ -82,6 +89,7 @@ func (ws *WebServer) setup() {
 
 // Runs the webserver
 func (ws *WebServer) RunWebServer() error {
+	log.Println(">> Webserver is now running!")
 	// Runs the Fiber webserver
 	err := ws.app.Listen(ws.config.WebServer.AddressAndPort)
 	if err != nil {

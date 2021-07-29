@@ -3,6 +3,7 @@ package mysql
 import (
 	"database/sql"
 	"fmt"
+	"log"
 	"strconv"
 
 	"github.com/fabiancdng/GoShortrr/internal/config"
@@ -29,6 +30,7 @@ func (m *MySQL) Init() error {
 		panic(err)
 	}
 
+	log.Println(">> MySQL tables have been initialized!")
 	return nil
 }
 
@@ -52,5 +54,6 @@ func (m *MySQL) Open(config *config.Config) error {
 		panic("Can't establish MySQL connection.")
 	}
 
+	log.Println(">> Successfully established connection to MySQL server!")
 	return nil
 }
