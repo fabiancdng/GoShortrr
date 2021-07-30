@@ -76,13 +76,20 @@ func (controller *AuthenticationController) loginUser(ctx *fiber.Ctx) error {
 	ctx.BodyParser(login)
 
 	user, err := controller.db.GetUser(login.Username)
-
 	if err != nil {
-		return err
+		return fiber.NewError(401)
+	}
+
+	match, err := argon2id.ComparePasswordAndHash(login.Password, user.Password)
+	if err != nil {
+		return fiber.NewError(401)
+	}
+
+	if match != true {
+		return fiber.NewError(401)
 	}
 
 	sess, err := controller.store.Get(ctx)
-
 	if err != nil {
 		log.Println(err)
 		return fiber.NewError(500)

@@ -73,9 +73,13 @@ func (ws *WebServer) setup() {
 		return c.SendString("Pong! 👋")
 	})
 
-	// Registers AuthorizationMiddleware to the global /api/* router
+	// Register TokenMiddleware to the global /api/* router
+	tokenMiddleware := new(middlewares.TokenMiddleware)
+	tokenMiddleware.Register(ws.db, ws.config, ws.store, apiRouter)
+
+	// Register AuthorizationMiddleware to the global /api/* router
 	authorizationMiddleware := new(middlewares.AuthorizationMiddleware)
-	authorizationMiddleware.Register(ws.db, ws.store, apiRouter)
+	authorizationMiddleware.Register(ws.db, ws.config, ws.store, apiRouter)
 
 	// Router that holds all routes starting with /api/auth/*
 	apiAuthRouter := apiRouter.Group("/auth")

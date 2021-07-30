@@ -3,27 +3,35 @@ package middlewares
 import (
 	"log"
 
+	"github.com/fabiancdng/GoShortrr/internal/config"
 	"github.com/fabiancdng/GoShortrr/internal/database"
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/fiber/v2/middleware/session"
 )
 
-// A middleware that checks for a BasicAuth token or a valid session
-// and passes the authorization status as well as the user to the next middleware/handler
+// A middleware that checks for a valid session and passes the authorization status
+// as well as the user to the next middleware/handler
 type AuthorizationMiddleware struct {
-	db    database.Database
-	store *session.Store
+	db     database.Database
+	config *config.Config
+	store  *session.Store
 }
 
-func (middleware *AuthorizationMiddleware) Register(db database.Database, store *session.Store, router fiber.Router) {
+func (middleware *AuthorizationMiddleware) Register(db database.Database, config *config.Config, store *session.Store, router fiber.Router) {
 	middleware.db = db
+	middleware.config = config
 	middleware.store = store
 
-	// Registers middleware function the the router
+	// Register middleware function the the router
 	router.Use(middleware.execute)
 }
 
 func (middleware *AuthorizationMiddleware) execute(ctx *fiber.Ctx) error {
+	// Skip middleware because request is already authorized
+	if ctx.Locals("authorized") == true {
+		return ctx.Next()
+	}
+
 	sess, err := middleware.store.Get(ctx)
 	if err != nil {
 		log.Println(err)

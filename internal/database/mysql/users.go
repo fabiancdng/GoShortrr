@@ -70,7 +70,6 @@ func (m *MySQL) GetUser(username string) (*models.User, error) {
 	user := new(models.User)
 
 	result, err := m.db.Query("SELECT * FROM `users` WHERE `username` = ?", username)
-
 	if err != nil {
 		log.Println(err)
 	}
