@@ -23,7 +23,7 @@ type WebServer struct {
 
 // Creates, sets up and returns a WebServer
 func NewWebServer(db database.Database, config *config.Config) (*WebServer, error) {
-	// Initializes Fiber app and Session store
+	// Initialize Fiber app and Session store
 	app := fiber.New(fiber.Config{
 		DisableStartupMessage: true,
 	})
@@ -33,7 +33,7 @@ func NewWebServer(db database.Database, config *config.Config) (*WebServer, erro
 		Expiration: 24 * time.Hour * 30,
 	})
 
-	// Creates WebServer and injects dependencies
+	// Create WebServer and injects dependencies
 	ws := &WebServer{
 		app:    app,
 		store:  store,
@@ -43,7 +43,7 @@ func NewWebServer(db database.Database, config *config.Config) (*WebServer, erro
 
 	ws.setup()
 
-	// Returns created WebServer object
+	// Return the created WebServer object
 	return ws, nil
 }
 
@@ -53,12 +53,12 @@ func (ws *WebServer) setup() {
 	//     STATIC     //
 	////////////////////
 
-	// Serves production build of React app
+	// Serve production build of React app
 	ws.app.Static("/*", "./web/build")
-	// Serves server monitor from Fiber middleware
+	// Serve server monitor from Fiber middleware
 	ws.app.Get("/monitor", monitor.New())
 
-	// Registers logging middleware
+	// Register logging middleware
 	ws.app.Use(logger.New())
 
 	/////////////////
@@ -94,7 +94,7 @@ func (ws *WebServer) setup() {
 // Runs the webserver
 func (ws *WebServer) RunWebServer() error {
 	log.Println(">> Webserver is now running!")
-	// Runs the Fiber webserver
+	// Run the Fiber webserver
 	err := ws.app.Listen(ws.config.WebServer.AddressAndPort)
 	if err != nil {
 		return err

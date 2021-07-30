@@ -34,10 +34,10 @@ func (controller *AuthenticationController) registerUser(ctx *fiber.Ctx) error {
 		return fiber.NewError(401)
 	}
 
-	// Gets user from the request's locals
+	// Get user from the request's locals
 	user := ctx.Locals("user").(*models.User)
 
-	// Returns an error if user doesn't have admin permissions
+	// Return an error if user doesn't have admin permissions
 	if user.Role != 1 {
 		return fiber.NewError(401, "insufficient permissions")
 	}

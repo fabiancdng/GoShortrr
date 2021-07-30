@@ -47,7 +47,7 @@ func (m *MySQL) ValidateShortlink(short string) bool {
 	return true
 }
 
-// Returns what's behind a shortlink
+// Obtains a user from the database by it's unique part
 func (m *MySQL) GetShortlink(short string) (models.Shortlink, error) {
 	var shortlink models.Shortlink
 	var shortlinkPassword string

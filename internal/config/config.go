@@ -36,7 +36,7 @@ func validateConfigPath(path string) error {
 	return nil
 }
 
-// Parse the config file
+// Parses the config file
 func ParseConfig(path string) (*Config, error) {
 	if err := validateConfigPath(path); err != nil {
 		return nil, err

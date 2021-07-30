@@ -44,7 +44,7 @@ func (controller *ShortlinkController) createShortlink(ctx *fiber.Ctx) error {
 		return fiber.NewError(401)
 	}
 
-	// Gets user from the request's locals
+	// Get user from the request's locals
 	user := ctx.Locals("user").(*models.User)
 
 	shortlinkToCreate := new(models.ShortlinkToCreate)

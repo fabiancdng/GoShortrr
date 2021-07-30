@@ -49,7 +49,7 @@ func (m *MySQL) ValidateUser(user *models.User) int {
 		return 804
 	}
 
-	// Checks if username is already taken
+	// Check if username is already taken
 	result, err := m.db.Query("SELECT * FROM `users` WHERE `username` = ?", user.Username)
 
 	if err != nil {

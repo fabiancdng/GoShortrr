@@ -10,9 +10,8 @@ import (
 	"github.com/gofiber/fiber/v2/middleware/session"
 )
 
-// A middleware that checks for an Authorization header and extracts the token in it
-// The token is then passed on to the next middleware/handler to authorize the request
-// without a session
+// A middleware that checks for an authorization header and extracts the token in it
+// The token is then validated and if valid, the authorization middleware gets skipped
 type TokenMiddleware struct {
 	db     database.Database
 	config *config.Config
@@ -31,7 +30,7 @@ func (middleware *TokenMiddleware) execute(ctx *fiber.Ctx) error {
 	authorizationToken := ctx.Get("Authorization")
 	apiAccessToken := middleware.config.WebServer.APIAccessToken
 
-	// Skip middleware execution because there is no Authorization header
+	// Skip middleware execution because there is no authorization header
 	if authorizationToken == "" {
 		ctx.Locals("authorized", false)
 		return ctx.Next()
@@ -44,7 +43,7 @@ func (middleware *TokenMiddleware) execute(ctx *fiber.Ctx) error {
 
 	authorizationToken = strings.ReplaceAll(authorizationToken, "Basic ", "")
 
-	// Token not correct
+	// Token is not correct
 	if authorizationToken != middleware.config.WebServer.APIAccessToken {
 		ctx.Locals("authorized", false)
 		return ctx.Next()

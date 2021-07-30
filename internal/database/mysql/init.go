@@ -18,13 +18,13 @@ type MySQL struct {
 
 // Makes sure all tables exist in database
 func (m *MySQL) Init() error {
-	// Creates the users table if it doesn't exist
+	// Create the users table if it doesn't exist
 	_, err := m.db.Exec("CREATE TABLE IF NOT EXISTS `users` ( `user_id` INT NOT NULL AUTO_INCREMENT , `username` VARCHAR(50) NOT NULL , `password` VARCHAR(200) NOT NULL , `role` TINYINT NOT NULL , `created` TIMESTAMP NOT NULL , PRIMARY KEY (`user_id`)) ENGINE = InnoDB;")
 	if err != nil {
 		panic(err)
 	}
 
-	// Creates the shortlinks table if it doesn't exist
+	// Create the shortlinks table if it doesn't exist
 	_, err = m.db.Exec("CREATE TABLE IF NOT EXISTS `shortlinks` ( `id` BIGINT NOT NULL AUTO_INCREMENT , `link` TEXT NOT NULL , `short` VARCHAR(30) NOT NULL , `user` INT NOT NULL , `password` VARCHAR(50) NOT NULL , `created` TIMESTAMP NOT NULL , PRIMARY KEY (`id`), FOREIGN KEY (`user`) REFERENCES `users`(`user_id`)) ENGINE = InnoDB;")
 	if err != nil {
 		panic(err)
