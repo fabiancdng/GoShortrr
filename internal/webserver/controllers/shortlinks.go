@@ -24,7 +24,7 @@ func (controller *ShortlinkController) Register(db database.Database, store *ses
 	// Route for creating a shortlink
 	router.Post("/create", controller.createShortlink)
 	// Route for deleting a shortlink
-	router.Delete("/delete", controller.deleteShortlink)
+	router.Delete("/delete/:short", controller.deleteShortlink)
 }
 
 // Returns data behind a shortlink
@@ -58,7 +58,7 @@ func (controller *ShortlinkController) createShortlink(ctx *fiber.Ctx) error {
 	}
 
 	if controller.db.ValidateShortlink(shortlinkToCreate.Short) == false {
-		return fiber.NewError(409, "shortlink invalid or already taken")
+		return fiber.NewError(409, "Shortlink Invalid Or Already Taken")
 	}
 
 	controller.db.CreateShortlink(shortlinkToCreate, user)
@@ -71,5 +71,36 @@ func (controller *ShortlinkController) createShortlink(ctx *fiber.Ctx) error {
 
 // Deletes a shortlink
 func (controller *ShortlinkController) deleteShortlink(ctx *fiber.Ctx) error {
-	return ctx.SendString("Delete shortlink")
+	if ctx.Locals("authorized") == false {
+		return fiber.NewError(401)
+	}
+
+	// Get user from the request's locals
+	user := ctx.Locals("user").(*models.User)
+	short := ctx.Params("short")
+
+	shortlink, err := controller.db.GetShortlink(short)
+	if err != nil {
+		return fiber.NewError(404)
+	}
+
+	// If shortlink was created by a different user
+	if shortlink.User != user.Id {
+		// Check if user has admin permissions to delete the shortlink anyway
+		if user.Role < 1 {
+			return fiber.NewError(403, "Insufficient Permissions")
+		}
+	}
+
+	var affected int64
+	affected, err = controller.db.DeleteShortlink(shortlink.Short)
+	if err != nil {
+		return fiber.NewError(500)
+	}
+
+	if affected < 1 {
+		return fiber.NewError(500)
+	}
+
+	return ctx.SendStatus(200)
 }

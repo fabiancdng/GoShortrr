@@ -86,5 +86,5 @@ func (m *MySQL) GetUser(username string) (*models.User, error) {
 		return user, nil
 	}
 
-	return user, fiber.NewError(401, "invalid user")
+	return user, fiber.NewError(401, "Invalid User")
 }

@@ -31,6 +31,8 @@ type Database interface {
 	CreateShortlink(shortlinkToCreate *models.ShortlinkToCreate, user *models.User) bool
 	// Validates whether or not a shortlink is okay to be created
 	ValidateShortlink(short string) bool
-	// Obtains a user from the database by it's unique part
+	// Obtains a shortlink from the database by it's unique part
 	GetShortlink(short string) (models.Shortlink, error)
+	// Revokes/deletes a shortlink from the database by it's unique part
+	DeleteShortlink(short string) (int64, error)
 }

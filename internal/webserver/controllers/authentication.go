@@ -39,7 +39,7 @@ func (controller *AuthenticationController) registerUser(ctx *fiber.Ctx) error {
 
 	// Return an error if user doesn't have admin permissions
 	if user.Role != 1 {
-		return fiber.NewError(401, "insufficient permissions")
+		return fiber.NewError(401, "Insufficient Permissions")
 	}
 
 	userToRegister := new(models.User)

@@ -77,5 +77,14 @@ func (m *MySQL) GetShortlink(short string) (models.Shortlink, error) {
 		return shortlink, nil
 	}
 
-	return shortlink, fiber.NewError(404, "shortlink not found")
+	return shortlink, fiber.NewError(404, "Shortlink Not Found")
+}
+
+func (m *MySQL) DeleteShortlink(short string) (int64, error) {
+	result, err := m.db.Exec("DELETE FROM `shortlinks` WHERE `short`=?", short)
+	if err != nil {
+		return 0, err
+	}
+
+	return result.RowsAffected()
 }

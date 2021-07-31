@@ -38,7 +38,7 @@ func (middleware *TokenMiddleware) execute(ctx *fiber.Ctx) error {
 
 	// Skip middleware execution because token auth isn't set up
 	if apiAccessToken == "" || apiAccessToken == " " {
-		return fiber.NewError(401, "authorization using an access token isn't set up")
+		return fiber.NewError(401, "Authorization Using Token Is Not Allowed")
 	}
 
 	authorizationToken = strings.ReplaceAll(authorizationToken, "Basic ", "")
