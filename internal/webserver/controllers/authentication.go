@@ -27,6 +27,8 @@ func (controller *AuthenticationController) Register(db database.Database, store
 	router.Post("/register", controller.registerUser)
 	// Route for retrieving user info on frontend
 	router.Post("/user", controller.getUser)
+	// Route for destroying a session and revoking the cookie
+	router.Post("/logout", controller.logoutUser)
 }
 
 func (controller *AuthenticationController) registerUser(ctx *fiber.Ctx) error {
@@ -114,4 +116,17 @@ func (controller *AuthenticationController) getUser(ctx *fiber.Ctx) error {
 		"username": user.Username,
 		"role":     user.Role,
 	})
+}
+
+func (controller *AuthenticationController) logoutUser(ctx *fiber.Ctx) error {
+	sess, err := controller.store.Get(ctx)
+	if err != nil {
+		return fiber.NewError(500)
+	}
+
+	if err = sess.Destroy(); err != nil {
+		return fiber.NewError(500)
+	}
+
+	return ctx.SendStatus(200)
 }
