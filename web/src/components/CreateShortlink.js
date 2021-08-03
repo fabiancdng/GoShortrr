@@ -33,7 +33,6 @@ const CreateShortlink = () => {
             color="green"
             placeholder="Paste your long link here"
             buttonLabel="Shorten"
-            onOpen={onOpen}
             handlerFunction={createShortlink}
         />
 
