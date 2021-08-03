@@ -1,4 +1,4 @@
-import { Button, HStack, Input, InputGroup, InputLeftElement, Modal, ModalBody, ModalCloseButton, ModalContent, ModalHeader, ModalOverlay, Text, useClipboard, useDisclosure } from "@chakra-ui/react"
+import { Button, Flex, Input, InputGroup, InputLeftElement, Modal, ModalBody, ModalCloseButton, ModalContent, ModalHeader, ModalOverlay, Text, useClipboard, useDisclosure } from "@chakra-ui/react"
 import { useState } from "react"
 import { FiCheck, FiLink } from "react-icons/fi"
 import QuickAction from "./QuickAction"
@@ -39,7 +39,7 @@ const CreateShortlink = () => {
         <Modal size="4xl" onClose={onClose} isOpen={isOpen}>
                 <ModalOverlay />
                 <ModalContent pb={5}>
-                    <ModalHeader><HStack color="green.300"><FiCheck size={28} /> <Text>Shortlink created!</Text></HStack></ModalHeader>
+                    <ModalHeader><Flex color="green.300"><FiCheck size={25} /> <Text>Shortlink created!</Text></Flex></ModalHeader>
                     <ModalCloseButton />
                     <ModalBody>
                         <InputGroup>
