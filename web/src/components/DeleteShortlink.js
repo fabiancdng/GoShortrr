@@ -1,7 +1,22 @@
+import { useDisclosure } from "@chakra-ui/react"
+import { useState } from "react"
 import { FiTrash2 } from "react-icons/fi"
 import QuickAction from "./QuickAction"
 
 const DeleteShortlink = () => {
+    const { isOpen, onOpen, onClose } = useDisclosure()
+
+    const deleteShortlink = async (link) => {
+        link = link.replace(window.location.href, "")
+        var location = window.location.href.replace("http://", "").replace("https://", "")
+        link = link.replace(location, "")
+        await fetch(`/api/shortlink/delete/${link}`, {
+            method: 'DELETE'
+        })
+
+        onOpen()
+    }
+
     return (
         <QuickAction
             title="Quickly revoke a shortlink"
@@ -10,6 +25,7 @@ const DeleteShortlink = () => {
             color="red"
             placeholder="Paste your shortlink here"
             buttonLabel="Delete"
+            handlerFunction={deleteShortlink}
         />
     )
 }
