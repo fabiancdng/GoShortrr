@@ -2,6 +2,7 @@ package webserver
 
 import (
 	"log"
+	"net/http"
 	"time"
 
 	"github.com/fabiancdng/GoShortrr/internal/config"
@@ -9,6 +10,7 @@ import (
 	"github.com/fabiancdng/GoShortrr/internal/webserver/controllers"
 	"github.com/fabiancdng/GoShortrr/internal/webserver/middlewares"
 	"github.com/gofiber/fiber/v2"
+	"github.com/gofiber/fiber/v2/middleware/filesystem"
 	"github.com/gofiber/fiber/v2/middleware/logger"
 	"github.com/gofiber/fiber/v2/middleware/monitor"
 	"github.com/gofiber/fiber/v2/middleware/session"
@@ -49,24 +51,11 @@ func NewWebServer(db database.Database, config *config.Config) (*WebServer, erro
 
 // Registers all routes and their handler functions
 func (ws *WebServer) setup() {
-	////////////////////
-	//     STATIC     //
-	////////////////////
-
-	// Serve production build of React app
-	ws.app.Static("/*", "./web/build")
-	// Serve server monitor from Fiber middleware
-	ws.app.Get("/monitor", monitor.New())
+	// Router that holds all routes starting with /api/*
+	apiRouter := ws.app.Group("/api")
 
 	// Register logging middleware
 	ws.app.Use(logger.New())
-
-	/////////////////
-	//     API     //
-	/////////////////
-
-	// Router that holds all routes starting with /api/*
-	apiRouter := ws.app.Group("/api")
 
 	// Route for testing purposes
 	apiRouter.Get("/ping", func(c *fiber.Ctx) error {
@@ -89,6 +78,17 @@ func (ws *WebServer) setup() {
 	apiShortlinkRouter := apiRouter.Group("/shortlink")
 	new(controllers.ShortlinkController).Register(ws.db, ws.store, apiShortlinkRouter)
 
+	// Serve production build of React app (and all its assets)
+	ws.app.Use(filesystem.New(filesystem.Config{
+		Root:         http.Dir("web/build"),
+		Browse:       true,
+		Index:        "index.html",
+		MaxAge:       3600,
+		NotFoundFile: "index.html",
+	}))
+
+	// Serve server monitor from Fiber middleware
+	ws.app.Get("/monitor", monitor.New())
 }
 
 // Runs the webserver
