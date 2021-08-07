@@ -1,10 +1,15 @@
-import { Flex, Heading } from "@chakra-ui/react"
+import { Flex, Heading, IconButton, useBreakpointValue } from "@chakra-ui/react"
+import { useEffect, useState } from "react"
+import { FiMenu } from "react-icons/fi"
 import CreateShortlink from "../components/CreateShortlink"
 import DeleteShortlink from "../components/DeleteShortlink"
 import LookupShortlink from "../components/LookupShortlink"
 import Sidebar from "../components/Sidebar"
 
 const UserDashboard = ({ username }) => {
+    const [displayMobileNav, setDisplayMobileNav] = useState(false)
+    const navSize = useBreakpointValue({ base: "small", lg: "large" })
+
     const getTimeGreeting = () => {
         var currentTime = new Date().getHours()
 
@@ -14,13 +19,20 @@ const UserDashboard = ({ username }) => {
         return "Good night"
     }
 
+    useEffect(() => {
+        if (navSize !== 'small') {
+            setDisplayMobileNav(false)
+        }
+    }, [navSize])
+
     const timeGreeting = getTimeGreeting()
 
     return (
         <>
+        {navSize === 'small' && <IconButton onClick={e => setDisplayMobileNav(displayMobileNav ? false : true)} ml={5} mt={5} icon={<FiMenu />} />}
         <Flex>
-            <Sidebar />
-            <Flex flexDir="column" alignItems="center" width="100%" mt={10} ml="280px">
+            <Sidebar mobileNav={displayMobileNav} />
+            <Flex display={displayMobileNav ? 'none' : 'flex'} flexDir="column" alignItems="center" width="100%" mt={10} ml={navSize === 'small' ? '10px' : '280px'}>
                 <Heading width="90%">{timeGreeting}, {username}.</Heading>
 
                 <CreateShortlink />

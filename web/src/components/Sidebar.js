@@ -17,22 +17,22 @@ import {
 import NavItem from '../components/NavItem'
 import { UserContext } from '../context/UserContext'
 
-export default function Sidebar() {
+export default function Sidebar({ mobileNav }) {
     const { username, permissions } = useContext(UserContext)
     const navSize = useBreakpointValue({ base: "small", lg: "large" })
 
     return (
         <Flex
-            display={navSize === 'small' ? 'none' : 'flex'}
+            display={navSize === 'small' ? mobileNav ? 'block' : 'none' : 'flex'}
             left="5"
-            pos="fixed"
+            pos={mobileNav ? 'unset' : "fixed"}
             h="95vh"
             pr={5}
             marginTop="2.5vh"
             borderRight='1px solid #4b4b4b'
-            w="280px"
+            w={mobileNav ? '100%' : "280px"}
             flexDir="column"
-        >
+        >   
             <Flex
                 mt={15}
                 flexDir="column"
@@ -44,10 +44,10 @@ export default function Sidebar() {
             </Flex>
 
             <Flex
-                h="95vh"
+                h={mobileNav ? '70vh' : "95vh"}
                 pr={5}
                 marginTop="2vh"
-                w="280px"
+                w={mobileNav ? '100%' : "280px"}
                 flexDir="column"
                 justifyContent="space-between"
             >
