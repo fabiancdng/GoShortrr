@@ -33,6 +33,8 @@ type Database interface {
 	ValidateShortlink(short string) bool
 	// Obtains a shortlink from the database by it's unique part
 	GetShortlink(short string) (models.Shortlink, error)
+	// Gets a list of all the user's shortlinks
+	GetShortlinkList(user *models.User) ([]models.Shortlink, error)
 	// Revokes/deletes a shortlink from the database by it's unique part
 	DeleteShortlink(short string) (int64, error)
 }

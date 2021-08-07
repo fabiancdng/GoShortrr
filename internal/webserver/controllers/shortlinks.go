@@ -21,6 +21,8 @@ func (controller *ShortlinkController) Register(db database.Database, store *ses
 
 	// Route for looking up what's behind a shortlink
 	router.Get("/get/:short", controller.getShortlink)
+	// Route for getting a list of all the user's shortlinks
+	router.Get("/list", controller.getShortlinkList)
 	// Route for creating a shortlink
 	router.Post("/create", controller.createShortlink)
 	// Route for deleting a shortlink
@@ -36,6 +38,23 @@ func (controller *ShortlinkController) getShortlink(ctx *fiber.Ctx) error {
 	}
 
 	return ctx.JSON(shortlink)
+}
+
+// Returns a list of all the user's shortlinks
+func (controller *ShortlinkController) getShortlinkList(ctx *fiber.Ctx) error {
+	if ctx.Locals("authorized") == false {
+		return fiber.NewError(401)
+	}
+
+	// Get user from the request's locals
+	user := ctx.Locals("user").(*models.User)
+
+	shortlinkList, err := controller.db.GetShortlinkList(user)
+	if err != nil {
+		return err
+	}
+
+	return ctx.JSON(shortlinkList)
 }
 
 // Creates a shortlink
