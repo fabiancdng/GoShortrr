@@ -5,6 +5,7 @@ import {
     Avatar,
     Heading,
     useBreakpointValue,
+    IconButton,
 } from '@chakra-ui/react'
 import { useContext } from 'react'
 import {
@@ -12,7 +13,8 @@ import {
     FiUser,
     FiSettings,
     FiLink,
-    FiInfo
+    FiInfo,
+    FiLogOut
 } from 'react-icons/fi'
 import NavItem from '../components/NavItem'
 import { UserContext } from '../context/UserContext'
@@ -20,6 +22,15 @@ import { UserContext } from '../context/UserContext'
 export default function Sidebar({ mobileNav }) {
     const { username, permissions } = useContext(UserContext)
     const navSize = useBreakpointValue({ base: "small", lg: "large" })
+
+    const logout = async () => {
+        await fetch("/api/auth/logout", {
+            method: 'POST',
+            credentials: 'include'
+        })
+
+        window.location.reload()
+    }
 
     return (
         <Flex
@@ -72,12 +83,16 @@ export default function Sidebar({ mobileNav }) {
                     alignItems="flex-start"
                 >
                     <Divider />
-                    <Flex mt={4} align="center">
-                        <Avatar size="sm" />
-                        <Flex flexDir="column" ml={4}>
-                            <Heading as="h3" size="sm">{ username }</Heading>
-                            <Text color="gray" size="xs">{ permissions === 0 ? 'User' : 'Admin' }</Text>
+                    <Flex mt={4} align="center" width="100%" justifyContent="space-between">
+                        <Flex flexDir="row">
+                            <Avatar size="sm" />
+                            <Flex flexDir="column" ml={4}>
+                                <Heading as="h3" size="sm">{ username }</Heading>
+                                <Text color="gray" size="xs">{ permissions === 0 ? 'User' : 'Admin' }</Text>
+                            </Flex>
                         </Flex>
+                        
+                        <IconButton rounded="md" onClick={logout} variant="ghost" icon={<FiLogOut />} />
                     </Flex>
                 </Flex>
             </Flex>
