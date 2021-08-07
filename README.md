@@ -46,6 +46,11 @@ API docs coming soon!
 
 <br>
 
+## 📦 Installation
+If you want to host your own instance of GoShortrr, follow the instructions provided on the [wiki page](https://github.com/fabiancdng/GoShortrr/wiki/%F0%9F%93%A6-Installation).
+
+<br>
+
 ## Third party dependencies
 
 ### Back End
