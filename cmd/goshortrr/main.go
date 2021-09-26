@@ -1,9 +1,9 @@
 /*
                              GoShortrr
 
-	A fast, simple and powerful URL Shortener built with Go and React.
+	  A fast, simple and powerful URL Shortener built with Go and React.
 
-	          Copyright (c) 2021 Fabian R. (fabiancdng)
+	            Copyright (c) 2021 Fabian Reinders (fabiancdng)
 
 */
 
@@ -13,7 +13,6 @@ import (
 	"github.com/fabiancdng/GoShortrr/internal/config"
 	"github.com/fabiancdng/GoShortrr/internal/database/mysql"
 	"github.com/fabiancdng/GoShortrr/internal/webserver"
-	_ "github.com/go-sql-driver/mysql"
 )
 
 func main() {

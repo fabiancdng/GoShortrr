@@ -7,14 +7,14 @@ import (
 
 // Defines what functions a database middleware must provide
 type Database interface {
+	// Following functions are for handling internal database affaires
+
 	// Opens a database connection
 	Open(config *config.Config) error
 	// Makes sure all tables exist in database
 	Init() error
 
-	////////////////
-	//    USERS   //
-	////////////////
+	// Following functions are for the users/accounts
 
 	// Creates a user
 	CreateUser(user *models.User) bool
@@ -23,9 +23,7 @@ type Database interface {
 	// Obtains a user from the database by their username
 	GetUser(username string) (*models.User, error)
 
-	/////////////////////
-	//    SHORTLINKS   //
-	/////////////////////
+	// Following functions are for the shortlinks
 
 	// Creates a shortlink
 	CreateShortlink(shortlinkToCreate *models.ShortlinkToCreate, user *models.User) bool

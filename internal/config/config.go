@@ -8,7 +8,7 @@ import (
 	"gopkg.in/yaml.v2"
 )
 
-// Parsed config
+// Holds data of parsed config
 type Config struct {
 	MySQL struct {
 		Host     string `yaml:"host"`
