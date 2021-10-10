@@ -7,7 +7,8 @@ import (
 	"github.com/gofiber/fiber/v2"
 )
 
-// Creates a shortlink
+// Inserts the passed shortlink into the database and
+// therefore finalizes its creation.
 func (m *MySQL) CreateShortlink(shortlinkToCreate *models.ShortlinkToCreate, user *models.User) bool {
 	_, err := m.db.Exec("INSERT INTO `shortlinks` (`id`, `link`, `short`, `user`, `password`, `created`) VALUES (NULL, ?, ?, ?, ?, CURRENT_TIMESTAMP());", shortlinkToCreate.Link, shortlinkToCreate.Short, user.Id, shortlinkToCreate.Password)
 
@@ -19,7 +20,8 @@ func (m *MySQL) CreateShortlink(shortlinkToCreate *models.ShortlinkToCreate, use
 	return true
 }
 
-// Validates whether or not a shortlink is okay to be created
+// Validates whether or not the generated unique part of a shortlink
+// is okay to be used.
 func (m *MySQL) ValidateShortlink(short string) bool {
 	if short == "" {
 		// Shortlink can't be empty
@@ -47,7 +49,7 @@ func (m *MySQL) ValidateShortlink(short string) bool {
 	return true
 }
 
-// Obtains a user from the database by it's unique part
+// Obtains a shortlink from the database by it's unique part.
 func (m *MySQL) GetShortlink(short string) (models.Shortlink, error) {
 	var shortlink models.Shortlink
 	var shortlinkPassword string
@@ -80,7 +82,7 @@ func (m *MySQL) GetShortlink(short string) (models.Shortlink, error) {
 	return shortlink, fiber.NewError(404, "Shortlink Not Found")
 }
 
-// Gets a list of all the user's shortlinks
+// Returns a list of all the user's shortlinks.
 func (m *MySQL) GetShortlinkList(user *models.User) ([]models.Shortlink, error) {
 	shortlink := new(models.Shortlink)
 	var shortlinkList []models.Shortlink
@@ -113,6 +115,8 @@ func (m *MySQL) GetShortlinkList(user *models.User) ([]models.Shortlink, error) 
 	return shortlinkList, nil
 }
 
+// Revokes/deletes a shortlink from the database.
+// The shortlink is identified by its unique part.
 func (m *MySQL) DeleteShortlink(short string) (int64, error) {
 	result, err := m.db.Exec("DELETE FROM `shortlinks` WHERE `short`=?", short)
 	if err != nil {

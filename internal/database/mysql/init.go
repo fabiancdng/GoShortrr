@@ -9,14 +9,43 @@ import (
 	"github.com/fabiancdng/GoShortrr/internal/config"
 )
 
-// MySQL database middleware
-// This implements the database.Database interface
+// Middleware for interacting with the MySQL database.
+//
+// This implements the database.Database interface and, therefore,
+// provides all methods defined in it.
 type MySQL struct {
 	db     *sql.DB
 	config *config.Config
 }
 
-// Makes sure all tables exist in database
+// Opens a database connection that is safe for concurrent use
+// as it utilizes a connection pool.
+// Reference: https://pkg.go.dev/database/sql#Open
+func (m *MySQL) Open(config *config.Config) error {
+	m.config = config
+
+	dbConfig := fmt.Sprintf(
+		"%s:%s@tcp(%s:%s)/%s?parseTime=true",
+		m.config.MySQL.User,
+		m.config.MySQL.Password,
+		m.config.MySQL.Host,
+		strconv.Itoa(m.config.MySQL.Port),
+		m.config.MySQL.DB,
+	)
+
+	var err error
+	m.db, err = sql.Open("mysql", dbConfig)
+
+	if err != nil {
+		panic("Can't establish MySQL connection.")
+	}
+
+	log.Println(">> Successfully established connection to MySQL server!")
+	return nil
+}
+
+// Checks whether all needed tables exist and if not,
+// it automatically creates them as well as an admin user.
 func (m *MySQL) Init() error {
 	// Create the users table if it doesn't exist
 	_, err := m.db.Exec("CREATE TABLE IF NOT EXISTS `users` ( `user_id` INT NOT NULL AUTO_INCREMENT , `username` VARCHAR(50) NOT NULL , `password` VARCHAR(200) NOT NULL , `role` TINYINT NOT NULL , `created` TIMESTAMP NOT NULL , PRIMARY KEY (`user_id`)) ENGINE = InnoDB;")
@@ -50,32 +79,8 @@ func (m *MySQL) Init() error {
 			panic(err)
 		}
 	} else {
-		log.Printf(">> Currently, there are %s registered users", strconv.Itoa(userCount))
+		log.Printf(">> Currently, there are %s registered users.", strconv.Itoa(userCount))
 	}
 
-	return nil
-}
-
-// Opens a database connection
-func (m *MySQL) Open(config *config.Config) error {
-	m.config = config
-
-	dbConfig := fmt.Sprintf(
-		"%s:%s@tcp(%s:%s)/%s?parseTime=true",
-		m.config.MySQL.User,
-		m.config.MySQL.Password,
-		m.config.MySQL.Host,
-		strconv.Itoa(m.config.MySQL.Port),
-		m.config.MySQL.DB,
-	)
-
-	var err error
-	m.db, err = sql.Open("mysql", dbConfig)
-
-	if err != nil {
-		panic("Can't establish MySQL connection.")
-	}
-
-	log.Println(">> Successfully established connection to MySQL server!")
 	return nil
 }

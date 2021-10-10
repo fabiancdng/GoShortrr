@@ -8,13 +8,15 @@ import (
 	"github.com/gofiber/fiber/v2/middleware/session"
 )
 
-// The controller for handling all requests to /api/shortlink/*
-// These routes are for managing shortlinks
+// The controller for handling all requests to /api/shortlink/*.
+//
+// These routes are for managing shortlinks.
 type ShortlinkController struct {
 	db    database.Database
 	store *session.Store
 }
 
+// Registers this controller's routes and handlers to the passed fiber.Router.
 func (controller *ShortlinkController) Register(db database.Database, store *session.Store, router fiber.Router) {
 	controller.db = db
 	controller.store = store
@@ -29,7 +31,7 @@ func (controller *ShortlinkController) Register(db database.Database, store *ses
 	router.Delete("/delete/:short", controller.deleteShortlink)
 }
 
-// Returns data behind a shortlink
+// HTTP handler function for returning all data behind a shortlink.
 func (controller *ShortlinkController) getShortlink(ctx *fiber.Ctx) error {
 	shortlink, err := controller.db.GetShortlink(ctx.Params("short"))
 
@@ -40,7 +42,8 @@ func (controller *ShortlinkController) getShortlink(ctx *fiber.Ctx) error {
 	return ctx.JSON(shortlink)
 }
 
-// Returns a list of all the user's shortlinks
+// HTTP handler function for returning a list of all the user's shortlinks
+// as JSON.
 func (controller *ShortlinkController) getShortlinkList(ctx *fiber.Ctx) error {
 	if ctx.Locals("authorized") == false {
 		return fiber.NewError(401)
@@ -57,7 +60,7 @@ func (controller *ShortlinkController) getShortlinkList(ctx *fiber.Ctx) error {
 	return ctx.JSON(shortlinkList)
 }
 
-// Creates a shortlink
+// HTTP handler function for creating a shortlink.
 func (controller *ShortlinkController) createShortlink(ctx *fiber.Ctx) error {
 	if ctx.Locals("authorized") == false {
 		return fiber.NewError(401)
@@ -71,7 +74,7 @@ func (controller *ShortlinkController) createShortlink(ctx *fiber.Ctx) error {
 
 	if shortlinkToCreate.Short == "" {
 		for controller.db.ValidateShortlink(shortlinkToCreate.Short) == false {
-			short, _ := utils.GenerateShort(5)
+			short, _ := utils.GenerateRandomShortString(5)
 			shortlinkToCreate.Short = short
 		}
 	}
@@ -88,7 +91,7 @@ func (controller *ShortlinkController) createShortlink(ctx *fiber.Ctx) error {
 	})
 }
 
-// Deletes a shortlink
+// HTTP handler function for revoking/deleting a shortlink.
 func (controller *ShortlinkController) deleteShortlink(ctx *fiber.Ctx) error {
 	if ctx.Locals("authorized") == false {
 		return fiber.NewError(401)

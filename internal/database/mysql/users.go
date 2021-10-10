@@ -8,7 +8,7 @@ import (
 	"github.com/gofiber/fiber/v2"
 )
 
-// Creates a user
+// Inserts the passed user into the database.
 func (m *MySQL) CreateUser(user *models.User) bool {
 	_, err := m.db.Exec("INSERT INTO `users` (`user_id`, `username`, `password`, `role`, `created`) VALUES (NULL, ?, ?, ?, CURRENT_TIMESTAMP());", user.Username, user.Password, user.Role)
 
@@ -27,7 +27,7 @@ func (m *MySQL) CreateUser(user *models.User) bool {
 // 804 		Password too long
 // 805 		Username already taken
 
-// Validates whether or not a user is okay to be created
+// Validates whether or not a user is okay to be created.
 func (m *MySQL) ValidateUser(user *models.User) int {
 	if len(user.Username) < 5 {
 		// Username too short
@@ -65,7 +65,7 @@ func (m *MySQL) ValidateUser(user *models.User) int {
 	return 200
 }
 
-// Obtains a user from the database by their username
+// Obtains a full user from the database by their username.
 func (m *MySQL) GetUser(username string) (*models.User, error) {
 	user := new(models.User)
 

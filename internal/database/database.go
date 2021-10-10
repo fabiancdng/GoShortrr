@@ -5,34 +5,60 @@ import (
 	"github.com/fabiancdng/GoShortrr/internal/models"
 )
 
-// Defines what functions a database middleware must provide
+// Defines what methods a database middleware must provide.
 type Database interface {
-	// Following functions are for handling internal database affaires
+	//////////////////////////////////////
+	//                                  //
+	//    INTERNAL DATABASE AFFAIRES    //
+	//                                  //
+	//////////////////////////////////////
 
-	// Opens a database connection
+	// Opens a database connection that is safe for concurrent use
+	// as it utilizes a connection pool.
+	//
+	// Reference: https://pkg.go.dev/database/sql#Open
 	Open(config *config.Config) error
-	// Makes sure all tables exist in database
+
+	// Checks whether all needed tables exist and if not,
+	// it automatically creates them as well as an admin user.
 	Init() error
 
-	// Following functions are for the users/accounts
+	//////////////////////////////////
+	//                              //
+	//       USERS / ACCOUNTS       //
+	//                              //
+	//////////////////////////////////
 
-	// Creates a user
+	// Inserts the passed user into the database.
 	CreateUser(user *models.User) bool
-	// Validates whether or not a user is okay to be created
+
+	// Validates whether or not a user is okay to be created.
 	ValidateUser(user *models.User) int
-	// Obtains a user from the database by their username
+
+	// Obtains a full user from the database by their username.
 	GetUser(username string) (*models.User, error)
 
-	// Following functions are for the shortlinks
+	////////////////////////////
+	//                        //
+	//       SHORTLINKS       //
+	//                        //
+	////////////////////////////
 
-	// Creates a shortlink
+	// Inserts the passed shortlink into the database and
+	// therefore finalizes its creation.
 	CreateShortlink(shortlinkToCreate *models.ShortlinkToCreate, user *models.User) bool
-	// Validates whether or not a shortlink is okay to be created
+
+	// Validates whether or not the generated unique part of a shortlink
+	// is okay to be used.
 	ValidateShortlink(short string) bool
-	// Obtains a shortlink from the database by it's unique part
+
+	// Obtains a shortlink from the database by it's unique part.
 	GetShortlink(short string) (models.Shortlink, error)
-	// Gets a list of all the user's shortlinks
+
+	// Returns a list of all the user's shortlinks.
 	GetShortlinkList(user *models.User) ([]models.Shortlink, error)
-	// Revokes/deletes a shortlink from the database by it's unique part
+
+	// Revokes/deletes a shortlink from the database.
+	// The shortlink is identified by its unique part.
 	DeleteShortlink(short string) (int64, error)
 }

@@ -10,14 +10,16 @@ import (
 	"github.com/gofiber/fiber/v2/middleware/session"
 )
 
-// A middleware that checks for an authorization header and extracts the token in it
-// The token is then validated and if valid, the authorization middleware gets skipped
+// A middleware that checks for an authorization header and extracts the token in it.
+//
+// The token is then validated and if it's valid, the authorization middleware is skipped.
 type TokenMiddleware struct {
 	db     database.Database
 	config *config.Config
 	store  *session.Store
 }
 
+// Registers this middleware to the passed router and injects all needed dependencies.
 func (middleware *TokenMiddleware) Register(db database.Database, config *config.Config, store *session.Store, router fiber.Router) {
 	middleware.db = db
 	middleware.config = config
@@ -26,6 +28,7 @@ func (middleware *TokenMiddleware) Register(db database.Database, config *config
 	router.Use(middleware.execute)
 }
 
+// Run this middleware and pass on result(s).
 func (middleware *TokenMiddleware) execute(ctx *fiber.Ctx) error {
 	authorizationToken := ctx.Get("Authorization")
 	apiAccessToken := middleware.config.WebServer.APIAccessToken

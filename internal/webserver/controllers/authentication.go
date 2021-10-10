@@ -10,13 +10,15 @@ import (
 	"github.com/gofiber/fiber/v2/middleware/session"
 )
 
-// The controller for handling all requests to /api/auth/*
-// These routes are for managing authentication/users
+// The controller for handling all requests to /api/auth/*.
+//
+// These routes are for managing authentication/users.
 type AuthenticationController struct {
 	db    database.Database
 	store *session.Store
 }
 
+// Registers this controller's routes and handlers to the passed fiber.Router.
 func (controller *AuthenticationController) Register(db database.Database, store *session.Store, router fiber.Router) {
 	controller.db = db
 	controller.store = store
@@ -31,6 +33,7 @@ func (controller *AuthenticationController) Register(db database.Database, store
 	router.Post("/logout", controller.logoutUser)
 }
 
+// HTTP handler function for registering a new user.
 func (controller *AuthenticationController) registerUser(ctx *fiber.Ctx) error {
 	if ctx.Locals("authorized") == false {
 		return fiber.NewError(401)
@@ -73,6 +76,11 @@ func (controller *AuthenticationController) registerUser(ctx *fiber.Ctx) error {
 	}
 }
 
+// HTTP handler function for checking the users credentials and,
+// if correct, returning a cookie for the newly created session.
+//
+// The user is then considered logged-in and all further requests
+// will be authorized using the session cookie.
 func (controller *AuthenticationController) loginUser(ctx *fiber.Ctx) error {
 	login := new(models.Login)
 	ctx.BodyParser(login)
@@ -104,6 +112,9 @@ func (controller *AuthenticationController) loginUser(ctx *fiber.Ctx) error {
 	return ctx.SendStatus(200)
 }
 
+// HTTP handler function for getting more information about the
+// currently logged-in user that may be needed on the front end
+// or other applications.
 func (controller *AuthenticationController) getUser(ctx *fiber.Ctx) error {
 	if ctx.Locals("authorized") == false {
 		return fiber.NewError(401)
@@ -118,6 +129,8 @@ func (controller *AuthenticationController) getUser(ctx *fiber.Ctx) error {
 	})
 }
 
+// HTTP handler function for destroying a users session (& session cookie)
+// and, therefore, logging them out.
 func (controller *AuthenticationController) logoutUser(ctx *fiber.Ctx) error {
 	sess, err := controller.store.Get(ctx)
 	if err != nil {

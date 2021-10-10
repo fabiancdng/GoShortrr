@@ -9,14 +9,15 @@ import (
 	"github.com/gofiber/fiber/v2/middleware/session"
 )
 
-// A middleware that checks for a valid session and passes the authorization status
-// as well as the user to the next middleware/handler
+// A middleware that checks for a valid session and passes the authorization
+// status as well as the user to the next middleware/handler.
 type AuthorizationMiddleware struct {
 	db     database.Database
 	config *config.Config
 	store  *session.Store
 }
 
+// Registers this middleware to the passed router and injects all needed dependencies.
 func (middleware *AuthorizationMiddleware) Register(db database.Database, config *config.Config, store *session.Store, router fiber.Router) {
 	middleware.db = db
 	middleware.config = config
@@ -26,6 +27,7 @@ func (middleware *AuthorizationMiddleware) Register(db database.Database, config
 	router.Use(middleware.execute)
 }
 
+// Run this middleware and pass on result(s).
 func (middleware *AuthorizationMiddleware) execute(ctx *fiber.Ctx) error {
 	// Skip middleware because request is already authorized
 	if ctx.Locals("authorized") == true {

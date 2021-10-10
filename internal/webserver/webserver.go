@@ -16,6 +16,7 @@ import (
 	"github.com/gofiber/fiber/v2/middleware/session"
 )
 
+// WebServer object holding the webserver and all its dependencies.
 type WebServer struct {
 	app    *fiber.App
 	store  *session.Store
@@ -23,19 +24,19 @@ type WebServer struct {
 	db     database.Database
 }
 
-// Creates, sets up and returns a WebServer
+// Instantiates and returns a WebServer object.
 func NewWebServer(db database.Database, config *config.Config) (*WebServer, error) {
-	// Initialize Fiber app and Session store
+	// Initialize Go Fiber
 	app := fiber.New(fiber.Config{
 		DisableStartupMessage: true,
 	})
 
-	// Session middleware
+	// Initialize sessions middleware
 	var store = session.New(session.Config{
 		Expiration: 24 * time.Hour * 30,
 	})
 
-	// Create WebServer and injects dependencies
+	// Create the instance and injects needed dependencies
 	ws := &WebServer{
 		app:    app,
 		store:  store,
@@ -45,11 +46,11 @@ func NewWebServer(db database.Database, config *config.Config) (*WebServer, erro
 
 	ws.setup()
 
-	// Return the created WebServer object
 	return ws, nil
 }
 
-// Registers all routes and their handler functions
+// Registers all routes and their handler functions and middlewares
+// to the WebServer instance it's called from.
 func (ws *WebServer) setup() {
 	// Router that holds all routes starting with /api/*
 	apiRouter := ws.app.Group("/api")
@@ -94,7 +95,7 @@ func (ws *WebServer) setup() {
 // Runs the webserver
 func (ws *WebServer) RunWebServer() error {
 	log.Println(">> Webserver is now running!")
-	// Run the Fiber webserver
+	// Run the Fiber / Fasthttp webserver
 	err := ws.app.Listen(ws.config.WebServer.AddressAndPort)
 	if err != nil {
 		return err

@@ -16,40 +16,49 @@ import (
 )
 
 func main() {
-	//////////////////////
-	//      CONFIG      //
-	//////////////////////
 
+	////////////////////////////////
+	//                            //
+	//           CONFIG           //
+	//                            //
+	////////////////////////////////
+
+	// Read and parse the config.yml file
 	config, err := config.ParseConfig("./config/config.yml")
 	if err != nil {
 		panic(err)
 	}
 
-	///////////////////////
-	//      DATABASE     //
-	///////////////////////
+	//////////////////////////////////
+	//                              //
+	//           DATABASE           //
+	//                              //
+	//////////////////////////////////
 
+	// Instantiate Database object
 	db := new(mysql.MySQL)
 	if err := db.Open(config); err != nil {
 		panic(err)
 	}
 
-	// Makes sure all tables exist in database
+	// Prepare database
 	if err := db.Init(); err != nil {
 		panic(err)
 	}
 
-	//////////////////////
-	//     WEBSERVER    //
-	//////////////////////
+	///////////////////////////////////
+	//                               //
+	//           WEBSERVER           //
+	//                               //
+	///////////////////////////////////
 
-	// Creates WebServer
+	// Instantiate WebServer object
 	ws, err := webserver.NewWebServer(db, config)
 	if err != nil {
 		panic(err)
 	}
 
-	// Runs WebServer
+	// Run the webserver
 	err = ws.RunWebServer()
 	if err != nil {
 		panic(err)
