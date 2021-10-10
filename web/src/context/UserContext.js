@@ -1,11 +1,11 @@
-import { createContext, useState } from "react";
+import { createContext, useState } from 'react';
 
-export const UserContext = createContext()
+export const UserContext = createContext();
 
 export const UserProvider = ({children}) => {
-    const [username, setUsername] = useState('')
-    const [permissions, setPermissions] = useState(0)
-    const [loggedIn, setLoggedIn] = useState(false)
+    const [username, setUsername] = useState('');
+    const [permissions, setPermissions] = useState(0);
+    const [loggedIn, setLoggedIn] = useState(false);
 
     return (
         <UserContext.Provider
@@ -20,5 +20,5 @@ export const UserProvider = ({children}) => {
         >
             {children}
         </UserContext.Provider>
-    )
+    );
 }

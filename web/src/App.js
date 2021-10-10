@@ -1,53 +1,53 @@
-import { useContext, useEffect, useState } from 'react'
-import { Switch, Route, BrowserRouter, Redirect } from 'react-router-dom'
-import Login from "./pages/Login"
-import UserOnlyRoute from './components/UserOnlyRoute'
-import { UserContext } from './context/UserContext'
-import UserDashboard from './pages/UserDashboard'
-import ShortlinkRedirect from './pages/ShortlinkRedirect'
+import { useContext, useEffect, useState } from 'react';
+import { Switch, Route, BrowserRouter, Redirect } from 'react-router-dom';
+import Login from './pages/Login';
+import UserOnlyRoute from './components/global/UserOnlyRoute';
+import { UserContext } from './context/UserContext';
+import UserDashboard from './pages/UserDashboard';
+import ShortlinkRedirect from './pages/ShortlinkRedirect';
 
 const App = () => {
-  const { username, setUsername, permissions, setPermissions, loggedIn, setLoggedIn } = useContext(UserContext)
+  const { username, setUsername, setPermissions, loggedIn, setLoggedIn } = useContext(UserContext);
   // True if the API hasn't responded yet (to the /auth/user request)
-  const [pending, setPending] = useState(true)
+  const [pending, setPending] = useState(true);
 
   useEffect(() => {
     const fetchUserData = async () => {
       var res = await fetch('/api/auth/user', {
         method: 'POST',
         credentials: 'include'
-      })
+      });
       
       if(res.status === 401) {
-        setLoggedIn(false)
-        setPending(false)
+        setLoggedIn(false);
+        setPending(false);
       } else {
-        res = await res.json()
-        setLoggedIn(true)
-        setUsername(res.username)
-        setPermissions(res.role)
-        setPending(false)
+        res = await res.json();
+        setLoggedIn(true);
+        setUsername(res.username);
+        setPermissions(res.role);
+        setPending(false);
       }
     }
 
-    fetchUserData()
-  }, [])
+    fetchUserData();
+  }, []);
 
-  if(pending) return null
+  if(pending) return null;
 
   return (
     <BrowserRouter>
-        <div className="App">
+        <div className='App'>
           <Switch>
-            <UserOnlyRoute loggedIn={loggedIn} path="/" exact>
+            <UserOnlyRoute loggedIn={loggedIn} path='/' exact>
               <UserDashboard username={username} />
             </UserOnlyRoute>
 
-            <Route path="/login" exact>
-              {loggedIn ? <Redirect to="/" /> : <Login />}
+            <Route path='/login' exact>
+              {loggedIn ? <Redirect to='/' /> : <Login />}
             </Route>
 
-            <Route path="/">
+            <Route path='/'>
               <ShortlinkRedirect />
             </Route>
           </Switch>

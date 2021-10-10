@@ -1,3 +1,14 @@
+/*
+                                GoShortrr
+
+                      Global CSS for React front end.
+
+	  A fast, simple and powerful URL Shortener built with Go and React.
+
+	             Copyright (c) 2021 Fabian Reinders (fabiancdng)
+
+*/
+
 body {
   margin: 0;
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
