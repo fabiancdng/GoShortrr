@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import React, { useEffect } from 'react';
 import { useLocation } from 'react-router';
 
 const Redirect = () => {
@@ -13,7 +13,8 @@ const Redirect = () => {
         }
       
         fetchShortlinkData();
-    }, [])
+    // eslint-disable-next-line
+    }, []);
 
     return (
         <div>

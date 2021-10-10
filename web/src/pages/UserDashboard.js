@@ -1,9 +1,9 @@
+import React, { useEffect, useState } from 'react';
 import { Flex, Heading, IconButton, useBreakpointValue } from '@chakra-ui/react';
-import { useEffect, useState } from 'react';
 import { FiMenu } from 'react-icons/fi';
 import CreateShortlink from '../components/user-dashboard/CreateShortlink';
-import DeleteShortlink from '../components/DeleteShortlink';
-import LookupShortlink from '../components/LookupShortlink';
+import DeleteShortlink from '../components/user-dashboard/DeleteShortlink';
+import LookupShortlink from '../components/user-dashboard/LookupShortlink';
 import Sidebar from '../components/user-dashboard/Sidebar/Sidebar';
 
 const UserDashboard = ({ username }) => {

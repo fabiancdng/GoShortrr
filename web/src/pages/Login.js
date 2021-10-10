@@ -1,7 +1,7 @@
+import React, { useContext, useState } from 'react';
 import { Button } from '@chakra-ui/button';
 import { Box, Flex, Heading } from '@chakra-ui/layout';
 import { FormControl, FormLabel, Input, Spinner, Text } from '@chakra-ui/react';
-import { useContext, useState } from 'react';
 import { UserContext } from '../context/UserContext';
 
 const Login = () => {

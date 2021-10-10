@@ -1,4 +1,4 @@
-import { useContext, useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { Switch, Route, BrowserRouter, Redirect } from 'react-router-dom';
 import Login from './pages/Login';
 import UserOnlyRoute from './components/global/UserOnlyRoute';
@@ -31,6 +31,7 @@ const App = () => {
     }
 
     fetchUserData();
+  // eslint-disable-next-line
   }, []);
 
   if(pending) return null;

@@ -1,5 +1,5 @@
+import React, { useState } from 'react';
 import { Box, Button, Heading, HStack, Input, Text } from '@chakra-ui/react';
-import { useState } from 'react';
 
 const QuickAction = ({ title, subtitle, icon, color, placeholder, buttonLabel, handlerFunction }) => {
     const [link, setLink] = useState('');

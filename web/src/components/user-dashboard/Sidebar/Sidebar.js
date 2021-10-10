@@ -1,3 +1,4 @@
+import React, { useContext } from 'react';
 import {
     Flex,
     Text,
@@ -7,7 +8,6 @@ import {
     useBreakpointValue,
     IconButton,
 } from '@chakra-ui/react';
-import { useContext } from 'react';
 import {
     FiHome,
     FiUser,
@@ -16,8 +16,8 @@ import {
     FiInfo,
     FiLogOut
 } from 'react-icons/fi';
-import NavItem from '../components/NavItem';
-import { UserContext } from '../context/UserContext';
+import NavItem from './NavItem';
+import { UserContext } from '../../../context/UserContext';
 
 export default function Sidebar({ mobileNav }) {
     const { username, permissions } = useContext(UserContext);

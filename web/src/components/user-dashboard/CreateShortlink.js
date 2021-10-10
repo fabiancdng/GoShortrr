@@ -1,5 +1,5 @@
+import React, { useState } from 'react';
 import { Button, Flex, Input, InputGroup, InputLeftElement, Modal, ModalBody, ModalCloseButton, ModalContent, ModalHeader, ModalOverlay, Text, useClipboard, useDisclosure } from '@chakra-ui/react';
-import { useState } from 'react';
 import { FiCheck, FiLink } from 'react-icons/fi';
 import QuickAction from './QuickAction';
 

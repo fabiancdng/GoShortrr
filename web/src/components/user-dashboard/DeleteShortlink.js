@@ -1,5 +1,15 @@
-import { Flex, Modal, ModalBody, ModalCloseButton, ModalContent, ModalHeader, ModalOverlay, Text, useDisclosure } from '@chakra-ui/react';
-import { useState } from 'react';
+import React, { useState } from 'react';
+import {
+    Flex,
+    Modal,
+    ModalBody,
+    ModalCloseButton,
+    ModalContent,
+    ModalHeader,
+    ModalOverlay,
+    Text,
+    useDisclosure
+} from '@chakra-ui/react';
 import { FiTrash, FiTrash2 } from 'react-icons/fi';
 import QuickAction from './QuickAction';
 
