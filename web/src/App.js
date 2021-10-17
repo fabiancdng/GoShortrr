@@ -1,7 +1,7 @@
 import React, { useContext } from 'react';
 import { Switch, Route, BrowserRouter, Redirect } from 'react-router-dom';
 import Login from './pages/Login';
-import UserOnlyRoute from './components/global/UserOnlyRoute';
+import UserOnlyRoute from './components/shared/UserOnlyRoute';
 import { UserContext } from './context/UserContext';
 import UserDashboard from './pages/UserDashboard';
 import ShortlinkRedirect from './pages/ShortlinkRedirect';
