@@ -30,15 +30,15 @@ const CreateShortlink = () => {
         <>
             <QuickAction
                 title='Quickly create a shortlink'
-                subtitle={<b>Paste. Click the button. Done.</b>}
-                icon={<FiLink />}
+                subtitle={ <b>Paste. Click the button. Done.</b> }
+                icon={ <FiLink /> }
                 color='green'
                 placeholder='Paste your long link here'
                 buttonLabel='Shorten'
-                handlerFunction={createShortlink}
+                handlerFunction={ createShortlink }
             />
 
-            <Modal size='4xl' onClose={onClose} isOpen={isOpen}>
+            <Modal size='4xl' onClose={ onClose } isOpen={ isOpen }>
                     <ModalOverlay />
                     <ModalContent pb={5}>
                         <ModalHeader><Flex color='green.300'><FiCheck size={25} /> <Text>Shortlink created!</Text></Flex></ModalHeader>
@@ -47,11 +47,11 @@ const CreateShortlink = () => {
                             <InputGroup>
                                 <InputLeftElement
                                     pointerEvents='none'
-                                    children={<FiLink color='gray.300' />}
+                                    children={ <FiLink color='gray.300' /> }
                                 />
-                                <Input isReadOnly={true} type='text' value={shortlink} />
-                                <Button onClick={onCopy} ml={2}>
-                                    {hasCopied ? 'Copied' : 'Copy'}
+                                <Input isReadOnly={true} type='text' value={ shortlink } />
+                                <Button onClick={ onCopy } ml={2}>
+                                    { hasCopied ? 'Copied' : 'Copy' }
                                 </Button>
                             </InputGroup>
                         </ModalBody>

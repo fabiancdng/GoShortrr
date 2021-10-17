@@ -9,7 +9,7 @@ const QuickAction = ({ title, subtitle, icon, color, placeholder, buttonLabel, h
             <Heading size='lg'>{ title }</Heading>
             <Text mt={0.5} pl={0.5} size='xs'>{ subtitle }</Text>
             <HStack mt={3}>
-                <Input placeholder={ placeholder } size='md' value={link} onChange={e => setLink(e.target.value)} />
+                <Input placeholder={ placeholder } size='md' value={ link } onChange={e => setLink(e.target.value)} />
                 <Button colorScheme={ color } variant='outline' leftIcon={ icon } onClick={ e => { handlerFunction(link) } }>{ buttonLabel }</Button>
             </HStack>
         </Box>

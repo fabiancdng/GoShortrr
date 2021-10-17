@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from 'react';
+import React, { useContext } from 'react';
 import { Switch, Route, BrowserRouter, Redirect } from 'react-router-dom';
 import Login from './pages/Login';
 import UserOnlyRoute from './components/global/UserOnlyRoute';
@@ -7,45 +7,22 @@ import UserDashboard from './pages/UserDashboard';
 import ShortlinkRedirect from './pages/ShortlinkRedirect';
 
 const App = () => {
-  const { username, setUsername, setPermissions, loggedIn, setLoggedIn } = useContext(UserContext);
-  // True if the API hasn't responded yet (to the /auth/user request)
-  const [pending, setPending] = useState(true);
+  // Get user-specific states from global user context
+  const { username, loggedIn, pending } = useContext(UserContext);
 
-  useEffect(() => {
-    const fetchUserData = async () => {
-      var res = await fetch('/api/auth/user', {
-        method: 'POST',
-        credentials: 'include'
-      });
-      
-      if(res.status === 401) {
-        setLoggedIn(false);
-        setPending(false);
-      } else {
-        res = await res.json();
-        setLoggedIn(true);
-        setUsername(res.username);
-        setPermissions(res.role);
-        setPending(false);
-      }
-    }
-
-    fetchUserData();
-  // eslint-disable-next-line
-  }, []);
-
+  // Login/user status isn't checked yet
   if(pending) return null;
 
   return (
     <BrowserRouter>
         <div className='App'>
           <Switch>
-            <UserOnlyRoute loggedIn={loggedIn} path='/' exact>
-              <UserDashboard username={username} />
+            <UserOnlyRoute loggedIn={ loggedIn } path='/' exact>
+              <UserDashboard username={ username } />
             </UserOnlyRoute>
 
             <Route path='/login' exact>
-              {loggedIn ? <Redirect to='/' /> : <Login />}
+              { loggedIn ? <Redirect to='/' /> : <Login /> }
             </Route>
 
             <Route path='/'>

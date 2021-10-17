@@ -8,9 +8,9 @@ import theme from './theme';
 
 ReactDOM.render(
   <React.StrictMode>
-    <ChakraProvider theme={theme}>
+    <ChakraProvider theme={ theme }>
       <UserProvider>
-          <ColorModeScript initialColorMode={theme.config.initialColorMode} />
+          <ColorModeScript initialColorMode={ theme.config.initialColorMode } />
           <App />
       </UserProvider>
     </ChakraProvider>

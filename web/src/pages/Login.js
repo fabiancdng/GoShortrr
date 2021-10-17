@@ -3,13 +3,15 @@ import { Button } from '@chakra-ui/button';
 import { Box, Flex, Heading } from '@chakra-ui/layout';
 import { FormControl, FormLabel, Input, Spinner, Text } from '@chakra-ui/react';
 import { UserContext } from '../context/UserContext';
+import { getUserData, loginUser } from '../adapters/UserAdapter';
 
 const Login = () => {
-    const { setUsername, setLoggedIn, setPermissions } = useContext(UserContext);
+    // Get functions to store user data in the global user context
+    // as those are needed in the case of a successful login
+    const { setUsername, setPermissions, setLoggedIn, setPending } = useContext(UserContext);
 
     const [usernameInput, setUsernameInput] = useState('');
     const [passwordInput, setPasswordInput] = useState('');
-    const [status, setStatus] = useState(0);
     
     /*
         Possible status values:
@@ -20,6 +22,7 @@ const Login = () => {
         3 = submitted but error
         4 = submitted and session created
     */
+    const [status, setStatus] = useState(0);
 
     const submitHandler = async (e) => {
         e.preventDefault();
@@ -27,31 +30,30 @@ const Login = () => {
         setUsernameInput('');
         setPasswordInput('');
 
-        var res = await fetch('/api/auth/login', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({username: usernameInput, password: passwordInput})
-        });
-
-        if(res.status === 200) {
-            setStatus(4);
-            res = await fetch('/api/auth/user', {
-                method: 'POST',
-                credentials: 'include'
+        loginUser(usernameInput, passwordInput)
+            .then(loginSucceeded => {
+                if (loginSucceeded) {
+                    // Try again to get user data from the API as the user
+                    // should now be logged in
+                    getUserData()
+                        .then(userData => {
+                            setUsername(userData.username);
+                            setPermissions(userData.role);
+                            setLoggedIn(true);
+                            setPending(false);
+                        })
+                        .catch(httpErrorCode => {
+                            setPending(false);
+                            setLoggedIn(false);
+                        });
+                    setStatus(4);
+                }
+                else setStatus(3);
+            })
+            .catch(httpErrorCode => {
+                if (httpErrorCode === 401) setStatus(2);
+                else setStatus(3);
             });
-
-            if(res.status === 401) {
-                setLoggedIn(false);
-            } else {
-                res = await res.json();
-                setLoggedIn(true);
-                setUsername(res.username);
-                setPermissions(res.role);
-            }
-        } else if(res.status === 401) setStatus(2);
-        else setStatus(3);
     }
 
     return (

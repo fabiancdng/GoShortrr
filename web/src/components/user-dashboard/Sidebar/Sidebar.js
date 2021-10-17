@@ -18,30 +18,32 @@ import {
 } from 'react-icons/fi';
 import NavItem from './NavItem';
 import { UserContext } from '../../../context/UserContext';
+import { logoutUser } from '../../../adapters/UserAdapter';
 
 export default function Sidebar({ mobileNav }) {
     const { username, permissions } = useContext(UserContext);
     const navSize = useBreakpointValue({ base: 'small', lg: 'large' });
 
     const logout = async () => {
-        await fetch('/api/auth/logout', {
-            method: 'POST',
-            credentials: 'include'
-        });
-
-        window.location.reload();
+        logoutUser()
+            .then(loggedOut => {
+                if (loggedOut) {
+                    window.location.reload();
+                }
+            })
+            .catch(err => window.location.reload());
     }
 
     return (
         <Flex
-            display={navSize === 'small' ? mobileNav ? 'block' : 'none' : 'flex'}
+            display={ navSize === 'small' ? mobileNav ? 'block' : 'none' : 'flex' }
             left='5'
-            pos={mobileNav ? 'unset' : 'fixed'}
+            pos={ mobileNav ? 'unset' : 'fixed' }
             h='95vh'
             pr={5}
             marginTop='2.5vh'
             borderRight='1px solid #4b4b4b'
-            w={mobileNav ? '100%' : '280px'}
+            w={ mobileNav ? '100%' : '280px' }
             flexDir='column'
         >   
             <Flex
@@ -55,10 +57,10 @@ export default function Sidebar({ mobileNav }) {
             </Flex>
 
             <Flex
-                h={mobileNav ? '70vh' : '95vh'}
+                h={ mobileNav ? '70vh' : '95vh' }
                 pr={5}
                 marginTop='2vh'
-                w={mobileNav ? '100%' : '280px'}
+                w={ mobileNav ? '100%' : '280px' }
                 flexDir='column'
                 justifyContent='space-between'
             >
@@ -69,11 +71,11 @@ export default function Sidebar({ mobileNav }) {
                     alignItems='flex-start'
                     as='nav'
                 >
-                    <NavItem icon={FiHome} title='Dashboard' active />
-                    <NavItem icon={FiLink} title='Shortlinks' />
-                    <NavItem icon={FiUser} title='Users' disabled />
-                    <NavItem icon={FiInfo} title='Infos' disabled />
-                    <NavItem icon={FiSettings} title='Settings' disabled />
+                    <NavItem icon={ FiHome } title='Dashboard' active />
+                    <NavItem icon={ FiLink } title='Shortlinks' />
+                    <NavItem icon={ FiUser } title='Users' disabled />
+                    <NavItem icon={ FiInfo } title='Infos' disabled />
+                    <NavItem icon={ FiSettings } title='Settings' disabled />
                 </Flex>
 
                 <Flex
@@ -92,7 +94,7 @@ export default function Sidebar({ mobileNav }) {
                             </Flex>
                         </Flex>
                         
-                        <IconButton rounded='md' onClick={logout} variant='ghost' icon={<FiLogOut />} />
+                        <IconButton rounded='md' onClick={ logout } variant='ghost' icon={ <FiLogOut /> } />
                     </Flex>
                 </Flex>
             </Flex>

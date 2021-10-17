@@ -95,11 +95,11 @@ func (ws *WebServer) setup() {
 
 // Runs the webserver
 func (ws *WebServer) RunWebServer() error {
-	// Get the address and port Shortinator bind to from the config
+	// Get the address and port GoShortrr bind to from the config
 	addressAndPort := ws.config.WebServer.AddressAndPort
 
 	color.Set(color.FgGreen, color.Bold)
-	fmt.Printf("\n>> Shortinator is now running at http://%s !\n", addressAndPort)
+	fmt.Printf("\n>> GoShortrr is now running at http://%s !\n", addressAndPort)
 	color.Unset()
 
 	// Run the Fiber webserver
