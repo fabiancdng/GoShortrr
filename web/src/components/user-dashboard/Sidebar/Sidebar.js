@@ -22,6 +22,8 @@ import { logoutUser } from '../../../adapters/UserAdapter';
 
 export default function Sidebar({ mobileNav }) {
     const { username, permissions } = useContext(UserContext);
+
+    // Whether the mobile or desktop version of the navbar is (or should be) displayed.
     const navSize = useBreakpointValue({ base: 'small', lg: 'large' });
 
     const logout = async () => {
