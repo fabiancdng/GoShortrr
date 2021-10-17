@@ -17,28 +17,28 @@ import {
     useDisclosure } from '@chakra-ui/react';
 import { FiSearch } from 'react-icons/fi';
 import QuickAction from './QuickAction';
+import { getShortlinkData } from '../../adapters/ShortlinkAdapter';
 
 const LookupShortlink = () => {
+    // Whether or not modal is opened and functions to open and close it
     const { isOpen, onOpen, onClose } = useDisclosure();
+    // Whether the lookup failed or succeeded
     const [lookupStatus, setLookupStatus] = useState(false);
+    // The data of the shortlink returned by the API
     const [shortlinkData, setShortlinkData] = useState('');
 
-    const fetchShortlinkData = async (link) => {
-        link = link.replace(window.location.href, '');
-        var location = window.location.href.replace('http://', '').replace('https://', '');
-        link = link.replace(location, '');
-        var linkData = await fetch(`/api/shortlink/get/${link}`);
-        
-        if (linkData.ok) {
-            linkData = await linkData.json();
-            setShortlinkData(linkData);
-            setLookupStatus(true);
-            onOpen();
-        } else {
-            setShortlinkData('');
-            setLookupStatus(false);
-            onOpen();
-        }
+    const handleShortlinkLookup = (link) => {
+        getShortlinkData(link)
+            .then(data => {
+                setShortlinkData(data);
+                setLookupStatus(true);
+                onOpen();
+            })
+            .catch(httpErrorCode => {
+                setShortlinkData('');
+                setLookupStatus(false);
+                onOpen();
+            });
     }
 
     return (
@@ -50,7 +50,7 @@ const LookupShortlink = () => {
                 color='blue'
                 placeholder='Paste your shortlink here'
                 buttonLabel='Look up'
-                handlerFunction={ fetchShortlinkData }
+                handlerFunction={ handleShortlinkLookup }
             />
             
             <Modal size='4xl' onClose={ onClose } isOpen={ isOpen }>

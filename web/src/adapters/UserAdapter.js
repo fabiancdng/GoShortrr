@@ -18,7 +18,7 @@
  * 
  * @returns {Promise<UserData|number>} User data of the current user or HTTP error code
  */
-export const getUserData = async () => {
+export const getUserData = () => {
     return new Promise(async (resolve, reject) => {
         var res = await fetch('/api/auth/user', {
             method: 'POST',

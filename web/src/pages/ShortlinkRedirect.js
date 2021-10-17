@@ -1,18 +1,18 @@
 import React, { useEffect } from 'react';
 import { useLocation } from 'react-router';
+import { getShortlinkData } from '../adapters/ShortlinkAdapter';
 
 const Redirect = () => {
+    // Read current URL (as that is the shortlink to look up)
     const shortlink = useLocation().pathname;
 
     useEffect(() => {
-        const fetchShortlinkData = async () => {
-            var res = await fetch(`/api/shortlink/get${shortlink}`);
-            res = await res.json();
-
-            window.location.replace(res.link);
-        }
-      
-        fetchShortlinkData();
+        getShortlinkData(shortlink)
+            .then(shortlinkData => {
+                window.location.replace(shortlinkData.link);
+            })
+            // TODO: Error handling in case shortlink lookup failed
+            .catch(httpErrorCode => {});
     // eslint-disable-next-line
     }, []);
 

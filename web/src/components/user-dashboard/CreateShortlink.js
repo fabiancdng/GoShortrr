@@ -2,28 +2,24 @@ import React, { useState } from 'react';
 import { Button, Flex, Input, InputGroup, InputLeftElement, Modal, ModalBody, ModalCloseButton, ModalContent, ModalHeader, ModalOverlay, Text, useClipboard, useDisclosure } from '@chakra-ui/react';
 import { FiCheck, FiLink } from 'react-icons/fi';
 import QuickAction from './QuickAction';
+import { createShortlink } from '../../adapters/ShortlinkAdapter';
 
 const CreateShortlink = () => {
+    // Whether or not the modal is opened and functions to open and close it
     const { isOpen, onOpen, onClose } = useDisclosure();
+    // The generated shortlink returned by the API
     const [shortlink, setShortlink] = useState('');
+    // Whether or not the shortlink has been copied to the clipboard and function to do so
     const { hasCopied, onCopy } = useClipboard(shortlink);
 
-    const createShortlink = async (link) => {
-        var short = await fetch('/api/shortlink/create', {
-            method: 'POST',
-            credentials: 'include',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({link: link})
-        });
-
-        short = await short.json();
-        short = window.location.href + short.short;
-
-        setShortlink(short);
-
-        onOpen();
+    const handleShortlinkCreation = (link) => {
+        createShortlink(link)
+            .then(short => {
+                setShortlink(short);
+                onOpen();
+            })
+            // TODO: Error handling in case shortlink creation failed
+            .catch(httpErrorCode => {});
     }
 
     return (
@@ -35,7 +31,7 @@ const CreateShortlink = () => {
                 color='green'
                 placeholder='Paste your long link here'
                 buttonLabel='Shorten'
-                handlerFunction={ createShortlink }
+                handlerFunction={ handleShortlinkCreation }
             />
 
             <Modal size='4xl' onClose={ onClose } isOpen={ isOpen }>

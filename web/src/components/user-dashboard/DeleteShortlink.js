@@ -12,27 +12,29 @@ import {
 } from '@chakra-ui/react';
 import { FiTrash, FiTrash2 } from 'react-icons/fi';
 import QuickAction from './QuickAction';
+import { deleteShortlink } from '../../adapters/ShortlinkAdapter';
 
 const DeleteShortlink = () => {
+    // Whether or not the modal is opened and functions to open and close it
     const { isOpen, onOpen, onClose } = useDisclosure();
+    // Whether the delete request failed or succeeded
     const [deleteStatus, setDeleteStatus] = useState(false);
 
-    const deleteShortlink = async (link) => {
-        link = link.replace(window.location.href, '');
-        var location = window.location.href.replace('http://', '').replace('https://', '');
-        link = link.replace(location, '');
-        
-        var deleteRequest = await fetch(`/api/shortlink/delete/${link}`, {
-            method: 'DELETE'
-        });
-
-        if (deleteRequest.ok) {
-            setDeleteStatus(true);
-            onOpen();
-        } else {
-            setDeleteStatus(false);
-            onOpen();
-        }
+    const handleShortlinkDeletion = (link) => {
+        deleteShortlink(link)
+            .then(deleted => {
+                if (deleted) {
+                    setDeleteStatus(true);
+                    onOpen();
+                } else {
+                    setDeleteStatus(false);
+                    onOpen();
+                }
+            })
+            .catch(httpErrorCode => {
+                setDeleteStatus(false);
+                onOpen();
+            });
     }
 
     return (
@@ -44,7 +46,7 @@ const DeleteShortlink = () => {
                 color='red'
                 placeholder='Paste your shortlink here'
                 buttonLabel='Delete'
-                handlerFunction={ deleteShortlink }
+                handlerFunction={ handleShortlinkDeletion }
             />
 
             <Modal size='4xl' onClose={ onClose } isOpen={ isOpen }>
