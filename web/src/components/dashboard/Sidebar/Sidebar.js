@@ -74,7 +74,7 @@ export default function Sidebar({ mobileNav }) {
                     as='nav'
                 >
                     <NavItem icon={ FiHome } title='Dashboard' active />
-                    <NavItem icon={ FiLink } title='Shortlinks' />
+                    <NavItem icon={ FiLink } title='Shortlinks' disabled />
                     <NavItem icon={ FiUser } title='Users' disabled />
                     <NavItem icon={ FiInfo } title='Infos' disabled />
                     <NavItem icon={ FiSettings } title='Settings' disabled />
