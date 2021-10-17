@@ -37,8 +37,6 @@ GoShortrr ships with a nice and clean web dashboard that aims to give you a fron
 
 Screenshots coming soon!
 
-![Screenshot of user dashboard](assets/screenshot-user-dashboard.png)
-
 ### REST API
 As mentioned above, GoShortrr has a fast and open REST API that aims to provide an implementation of all of GoShortrr's features. The web dashboard itself utilizes this API, there is no such thing as an internal API.
 
