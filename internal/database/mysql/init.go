@@ -7,6 +7,7 @@ import (
 	"strconv"
 
 	"github.com/fabiancdng/GoShortrr/internal/config"
+	"github.com/fatih/color"
 )
 
 // Middleware for interacting with the MySQL database.
@@ -72,8 +73,23 @@ func (m *MySQL) Init() error {
 		rows.Scan(&userCount)
 	}
 
+	// If there's no user currently registered, create a default admin account
+	// that can be used to administrate the installation.
 	if userCount == 0 {
-		log.Println(">> There is no registered user!\n--> Creating a temporary admin account with username 'admin' and password 'admin'")
+		// Print credentials for auto-generated user in the console
+		// In a different font color and weight to make it stand out
+		// to the user as they have to change the default password as
+		// soon as possible
+		color.Set(color.FgBlue, color.Bold)
+		log.Println(">> There is no registered user!")
+		log.Println("-> Creating a temporary admin account with username 'admin' and password 'admin'.")
+
+		color.Set(color.FgHiRed, color.Bold)
+		log.Println("! Please change the admin account's password as soon as possible !")
+
+		// Reset font color and weight for console output again
+		color.Unset()
+
 		_, err := m.db.Exec("INSERT INTO `users` (`user_id`, `username`, `password`, `role`, `created`) VALUES (NULL, 'admin', '$argon2id$v=19$m=16,t=2,p=1$MjNtZjg3MmtmOQ$1OGCDVpPbrxhjEV8YRh0Kw', 1, CURRENT_TIMESTAMP());")
 		if err != nil {
 			panic(err)

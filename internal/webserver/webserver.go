@@ -1,7 +1,7 @@
 package webserver
 
 import (
-	"log"
+	"fmt"
 	"net/http"
 	"time"
 
@@ -9,6 +9,7 @@ import (
 	"github.com/fabiancdng/GoShortrr/internal/database"
 	"github.com/fabiancdng/GoShortrr/internal/webserver/controllers"
 	"github.com/fabiancdng/GoShortrr/internal/webserver/middlewares"
+	"github.com/fatih/color"
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/fiber/v2/middleware/filesystem"
 	"github.com/gofiber/fiber/v2/middleware/logger"
@@ -94,9 +95,15 @@ func (ws *WebServer) setup() {
 
 // Runs the webserver
 func (ws *WebServer) RunWebServer() error {
-	log.Println(">> Webserver is now running!")
-	// Run the Fiber / Fasthttp webserver
-	err := ws.app.Listen(ws.config.WebServer.AddressAndPort)
+	// Get the address and port Shortinator bind to from the config
+	addressAndPort := ws.config.WebServer.AddressAndPort
+
+	color.Set(color.FgGreen, color.Bold)
+	fmt.Printf("\n>> Shortinator is now running at http://%s !\n", addressAndPort)
+	color.Unset()
+
+	// Run the Fiber webserver
+	err := ws.app.Listen(addressAndPort)
 	if err != nil {
 		return err
 	}
