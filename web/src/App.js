@@ -11,7 +11,7 @@ const App = () => {
   const { username, loggedIn, pending } = useContext(UserContext);
 
   // Login/user status isn't checked yet
-  if(pending) return null;
+  if (pending) return null;
 
   return (
     <BrowserRouter>

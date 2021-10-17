@@ -25,7 +25,7 @@ export const getUserData = async () => {
             credentials: 'include'
         });
         
-        if(!res.ok) {
+        if (!res.ok) {
             reject(res.status);
         } else {
             res = await res.json();

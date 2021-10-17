@@ -13,9 +13,9 @@ const UserDashboard = ({ username }) => {
     const getTimeGreeting = () => {
         var currentTime = new Date().getHours();
 
-        if(currentTime < 12) return 'Good morning';
-        if(currentTime < 18) return 'Good afternoon';
-        if(currentTime < 23) return 'Good evening';
+        if (currentTime < 12) return 'Good morning';
+        if (currentTime < 18) return 'Good afternoon';
+        if (currentTime < 23) return 'Good evening';
         return 'Good night';
     }
 
@@ -27,12 +27,29 @@ const UserDashboard = ({ username }) => {
 
     return (
         <>
-        {navSize === 'small' && <IconButton rounded='md' variant='ghost' onClick={e => setDisplayMobileNav(displayMobileNav ? false : true)} ml={5} mt={5} icon={<FiMenu />} />}
+        { 
+            navSize === 'small'
+            && <IconButton
+                rounded='md'
+                variant='ghost'
+                onClick={ e => setDisplayMobileNav(displayMobileNav ? false : true) }
+                ml={5}
+                mt={5}
+                icon={ <FiMenu /> }
+            />
+        }
+            
         <Flex>
-            <Sidebar mobileNav={displayMobileNav} />
-            <Flex display={displayMobileNav ? 'none' : 'flex'} flexDir='column' alignItems='center' width='100%' mt={10} ml={navSize === 'small' ? '10px' : '280px'}>
-                <Heading width='90%'>{timeGreeting}, {username}.</Heading>
-
+            <Sidebar mobileNav={ displayMobileNav } />
+            <Flex
+                display={ displayMobileNav ? 'none' : 'flex' }
+                flexDir='column'
+                alignItems='center'
+                width='100%'
+                mt={10}
+                ml={ navSize === 'small' ? '10px' : '280px' }
+            >
+                <Heading width='90%'>{ timeGreeting }, { username }.</Heading>
                 <CreateShortlink />
                 <LookupShortlink />
                 <DeleteShortlink />

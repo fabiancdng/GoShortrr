@@ -73,17 +73,49 @@ const Login = () => {
                     <Heading>Login</Heading>
                 </Box>
                 <Box my={4} textAlign='left'>
-                    <form onSubmit={e => submitHandler(e)}>
-                    {status === 2 ? <Text textAlign='center' my={5} color='red'>Invalid username or password.</Text> : status === 3 && <Text my={5} textAlign='center' color='red'>Internal Server Error! Please try again later.</Text>}
-                    <FormControl>
-                        <FormLabel>Username</FormLabel>
-                        <Input value={usernameInput} type='text' placeholder='Your username' onChange={e => setUsernameInput(e.target.value)} />
-                    </FormControl>
-                    <FormControl mt={6}>
-                        <FormLabel>Password</FormLabel>
-                        <Input value={passwordInput} type='password' placeholder='Your password' onChange={e => setPasswordInput(e.target.value)} />
-                    </FormControl>
-                    {status === 1 ? <Button disabled={true} width='full' mt={4} type='submit'><Spinner mr={3} /> Signing in...</Button> : <Button width='full' mt={4} type='submit'>Sign In</Button>}
+                    <form onSubmit={ e => submitHandler(e) }>
+                        {
+                            status === 2
+                            ? <Text textAlign='center' my={5} color='red'>Invalid username or password.</Text>
+                            : status === 3 && <Text my={5} textAlign='center' color='red'>Internal Server Error! Please try again later.</Text>    
+                        }
+                        
+                        <FormControl>
+                            <FormLabel>Username</FormLabel>
+                            <Input
+                                value={ usernameInput }
+                                type='text'
+                                placeholder='Your username'
+                                onChange={ e => setUsernameInput(e.target.value) }
+                            />
+                        </FormControl>
+                        
+                        <FormControl mt={6}>
+                            <FormLabel>Password</FormLabel>
+                            <Input
+                                value={ passwordInput }
+                                type='password'
+                                placeholder='Your password'
+                                onChange={ e => setPasswordInput(e.target.value) }
+                            />
+                        </FormControl>
+                        
+                        {
+                            status === 1
+
+                            ? <Button
+                                disabled={true}
+                                width='full'
+                                mt={4}
+                                type='submit'
+                              ><Spinner mr={3} /> Signing in...</Button>
+
+                            : <Button
+                                width='full'
+                                mt={4}
+                                type='submit'
+                              >Sign In</Button>
+                        }
                     </form>
                 </Box>
             </Box>

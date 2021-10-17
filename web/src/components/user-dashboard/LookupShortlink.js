@@ -56,34 +56,63 @@ const LookupShortlink = () => {
             <Modal size='4xl' onClose={ onClose } isOpen={ isOpen }>
                 <ModalOverlay />
                 <ModalContent pb={5}>
-                    <ModalHeader><Flex color='blue.300'><FiSearch size={25} /><Text ml={2}>Shortlink Lookup</Text></Flex></ModalHeader>
+                    <ModalHeader>
+                        <Flex color='blue.300'>
+                            <FiSearch size={25} />
+                            <Text ml={2}>Shortlink Lookup</Text>
+                        </Flex>
+                    </ModalHeader>
+                    
                     <ModalCloseButton />
+                    
                     <ModalBody>
-                    { !lookupStatus && <Text color='red.300'>Unable to look up shortlink. Make sure it exists.</Text> }
+                        {
+                            !lookupStatus
+                            && <Text color='red.300'>Unable to look up shortlink. Make sure it exists.</Text>
+                        }
 
-                    {
-                        shortlinkData !== '' && 
-                        <Table variant='simple'>
-                            <Tbody>
-                                <Tr>
-                                    <Th>ID</Th>
-                                    <Td>{ shortlinkData.id }</Td>
-                                </Tr>
-                                <Tr>
-                                    <Th>Link</Th>
-                                    <Td><Link href={ shortlinkData.link } isExternal={true}>{ shortlinkData.link }</Link></Td>
-                                </Tr>
-                                <Tr>
-                                    <Th>Shortlink</Th>
-                                    <Td><Link href={ window.location.href + shortlinkData.short } isExternal={true}>{ window.location.href + shortlinkData.short }</Link></Td>
-                                </Tr>
-                                <Tr>
-                                    <Th>Created</Th>
-                                    <Td>{ shortlinkData.created.replace('T', ' - ').replace('Z', '') }</Td>
-                                </Tr>
-                            </Tbody>
-                        </Table>
-                    }
+                        {
+                            shortlinkData !== '' && 
+                            <Table variant='simple'>
+                                <Tbody>
+                                    <Tr>
+                                        <Th>ID</Th>
+                                        <Td>{ shortlinkData.id }</Td>
+                                    </Tr>
+                                    
+                                    <Tr>
+                                        <Th>Link</Th>
+                                        <Td>
+                                            <Link
+                                                href={ shortlinkData.link }
+                                                isExternal={true}
+                                            >
+                                                { shortlinkData.link }
+                                            </Link>
+                                        </Td>
+                                    </Tr>
+
+                                    <Tr>
+                                        <Th>Shortlink</Th>
+                                        <Td>
+                                            <Link
+                                                href={ window.location.href + shortlinkData.short }
+                                                isExternal={true}
+                                            >
+                                                { window.location.href + shortlinkData.short }
+                                            </Link>
+                                        </Td>
+                                    </Tr>
+                                    
+                                    <Tr>
+                                        <Th>Created</Th>
+                                        <Td>
+                                            { shortlinkData.created.replace('T', ' - ').replace('Z', '') }
+                                        </Td>
+                                    </Tr>
+                                </Tbody>
+                            </Table>
+                        }
                     </ModalBody>
                 </ModalContent>
             </Modal>

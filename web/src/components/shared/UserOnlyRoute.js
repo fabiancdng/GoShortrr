@@ -2,7 +2,7 @@ import React from 'react';
 import { Route, Redirect } from 'react-router-dom';
 
 const UserOnlyRoute = ({ path, loggedIn, children }) => {
-    if(loggedIn) {
+    if (loggedIn) {
         return (
             <Route path={path}>
                 {children}

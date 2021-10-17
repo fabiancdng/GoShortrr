@@ -41,8 +41,15 @@ const CreateShortlink = () => {
             <Modal size='4xl' onClose={ onClose } isOpen={ isOpen }>
                     <ModalOverlay />
                     <ModalContent pb={5}>
-                        <ModalHeader><Flex color='green.300'><FiCheck size={25} /> <Text>Shortlink created!</Text></Flex></ModalHeader>
+                        <ModalHeader>
+                            <Flex color='green.300'>
+                                <FiCheck size={25} />
+                                <Text>Shortlink created!</Text>
+                            </Flex>
+                        </ModalHeader>
+
                         <ModalCloseButton />
+                        
                         <ModalBody>
                             <InputGroup>
                                 <InputLeftElement
