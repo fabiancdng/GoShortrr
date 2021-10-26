@@ -17,7 +17,7 @@
  * Example: https://s.example.org:293/
  * @type {String}
  */
-const host = window.location.protocol + '//' + window.location.host + '/';
+export const host = window.location.protocol + '//' + window.location.host + '/';
 
 /**
  * Gets the data behind a shortlink.
@@ -38,6 +38,29 @@ export const getShortlinkData = (link) => {
         link = link.replace(location, '');
         
         var res = await fetch(`/api/shortlink/get/${link}`);
+        
+        if (!res.ok) {
+            // Reject promise with the HTTP error code as value
+            reject(res.status);
+        } else {
+            // Resolve promise with shortlink data as value
+            resolve(await res.json());
+        }
+    });
+}
+
+/**
+ * Gets all shortlinks of the currently logged-in user.
+ * 
+ * `[GET] /api/shortlink/list`
+ * 
+ * Reference: https://github.com/fabiancdng/GoShortrr/wiki/%F0%9F%94%8C-REST-API#get-apishortlinklist
+ * 
+ * @returns {Promise<Array.<ShortlinkData>|number>} The list of shortlinks or the HTTP error code
+ */
+ export const getShortlinkList = () => {
+    return new Promise(async (resolve, reject) => {
+        var res = await fetch(`/api/shortlink/list`);
         
         if (!res.ok) {
             // Reject promise with the HTTP error code as value

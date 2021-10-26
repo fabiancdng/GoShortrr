@@ -17,16 +17,9 @@ import {
     useDisclosure } from '@chakra-ui/react';
 import { FiSearch } from 'react-icons/fi';
 import QuickAction from './QuickAction';
-import { getShortlinkData } from '../../adapters/ShortlinkAdapter';
+import { host, getShortlinkData } from '../../adapters/ShortlinkAdapter';
 
 const LookupShortlink = () => {
-    /**
-     * Host and protocol of this instance (and if needed port).
-     * Example: https://s.example.org:293/
-     * @type {String}
-     */
-    const host = window.location.protocol + '//' + window.location.host + '/';
-
     // Whether or not modal is opened and functions to open and close it
     const { isOpen, onOpen, onClose } = useDisclosure();
     // Whether the lookup failed or succeeded
