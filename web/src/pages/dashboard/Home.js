@@ -1,10 +1,14 @@
 import { Heading } from '@chakra-ui/layout';
-import React from 'react';
-import CreateShortlink from './CreateShortlink';
-import DeleteShortlink from './DeleteShortlink';
-import LookupShortlink from './LookupShortlink';
+import React, { useContext } from 'react';
+import CreateShortlink from '../../components/dashboard/CreateShortlink';
+import DeleteShortlink from '../../components/dashboard/DeleteShortlink';
+import LookupShortlink from '../../components/dashboard/LookupShortlink';
+import { UserContext } from '../../context/UserContext';
 
-const Home = ({ username }) => {
+const Home = () => {
+    // Get user-specific states from global user context
+    const { username } = useContext(UserContext);
+
     const getTimeGreeting = () => {
         var currentTime = new Date().getHours();
 

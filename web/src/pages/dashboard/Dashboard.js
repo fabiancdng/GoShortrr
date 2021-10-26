@@ -1,13 +1,9 @@
-import React, { useContext, useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Flex, IconButton, useBreakpointValue } from '@chakra-ui/react';
 import { FiMenu } from 'react-icons/fi';
-import Sidebar from '../components/dashboard/Sidebar/Sidebar';
-import Home from '../components/dashboard/Home';
-import { UserContext } from '../context/UserContext';
+import Sidebar from '../../components/dashboard/Sidebar/Sidebar';
 
-const Dashboard = () => {
-    const { username } = useContext(UserContext);
-
+const Dashboard = ({ component }) => {
     const [displayMobileNav, setDisplayMobileNav] = useState(false);
     const navSize = useBreakpointValue({ base: 'small', lg: 'large' });
 
@@ -39,7 +35,7 @@ const Dashboard = () => {
                 mt={10}
                 ml={ navSize === 'small' ? '10px' : '280px' }
             >
-                <Home username={username} />
+                { component }
             </Flex>
         </Flex>
         </>

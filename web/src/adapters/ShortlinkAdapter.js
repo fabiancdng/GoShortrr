@@ -13,6 +13,13 @@
  */
 
 /**
+ * Host and protocol of this instance (and if needed port).
+ * Example: https://s.example.org:293/
+ * @type {String}
+ */
+const host = window.location.protocol + '//' + window.location.host + '/';
+
+/**
  * Gets the data behind a shortlink.
  * 
  * `[GET] /api/shortlink/get/SHORT`
@@ -26,8 +33,8 @@
 export const getShortlinkData = (link) => {
     return new Promise(async (resolve, reject) => {
         // Remove possible root URL / path from the URL
-        link = link.replace(window.location.href, '');
-        var location = window.location.href.replace('http://', '').replace('https://', '');
+        link = link.replace(host, '');
+        var location = host.replace('http://', '').replace('https://', '');
         link = link.replace(location, '');
         
         var res = await fetch(`/api/shortlink/get/${link}`);
@@ -71,7 +78,7 @@ export const createShortlink = (link) => {
             // Grab unique part of the shortlink, append the root URL, and
             // resolve the promise with it as value
             res = await res.json();
-            let short = window.location.href + res.short;
+            let short = host.replace('dashboard', '') + res.short;
             resolve(short);
         }
     });
@@ -91,8 +98,9 @@ export const createShortlink = (link) => {
 export const deleteShortlink = (link) => {
     return new Promise(async (resolve, reject) => {
         // Remove possible root URL / path from the URL
+        link = link.replace(host, '');
         link = link.replace(window.location.href, '');
-        var location = window.location.href.replace('http://', '').replace('https://', '');
+        var location = host.replace('http://', '').replace('https://', '');
         link = link.replace(location, '');
         
         var res = await fetch(`/api/shortlink/delete/${link}`, {
