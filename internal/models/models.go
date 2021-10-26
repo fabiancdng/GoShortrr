@@ -4,19 +4,17 @@ import "time"
 
 // Holds data for a shortlink
 type Shortlink struct {
-	Id       int       `json:"id"`
-	Link     string    `json:"link"`
-	Short    string    `json:"short"`
-	User     int       `json:"user"`
-	Password bool      `json:"password"`
-	Created  time.Time `json:"created"`
+	Id      int       `json:"id"`
+	Link    string    `json:"link"`
+	Short   string    `json:"short"`
+	User    int       `json:"user"`
+	Created time.Time `json:"created"`
 }
 
 // Defines what data a shortlink create request needs to have
 type ShortlinkToCreate struct {
-	Link     string `json:"link"`
-	Short    string `json:"short"`
-	Password string `json:"password"`
+	Link  string `json:"link"`
+	Short string `json:"short"`
 }
 
 // Holds data for a GoShortrr user

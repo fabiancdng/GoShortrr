@@ -8,7 +8,6 @@
  * @property {string} link The original (long) link behind the shortlink
  * @property {string} short The unique part of the shortlink
  * @property {user} user The internal ID of the user who created the shortlink
- * @property {boolean} password Whether the shortlink is protected by a password
  * @property {string} created Timestamp (datetime in ISO format) of shortlink creation
  */
 

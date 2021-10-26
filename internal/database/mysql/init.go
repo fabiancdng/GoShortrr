@@ -55,7 +55,7 @@ func (m *MySQL) Init() error {
 	}
 
 	// Create the shortlinks table if it doesn't exist
-	_, err = m.db.Exec("CREATE TABLE IF NOT EXISTS `shortlinks` ( `id` BIGINT NOT NULL AUTO_INCREMENT , `link` TEXT NOT NULL , `short` VARCHAR(30) NOT NULL , `user` INT NOT NULL , `password` VARCHAR(50) NOT NULL , `created` TIMESTAMP NOT NULL , PRIMARY KEY (`id`), FOREIGN KEY (`user`) REFERENCES `users`(`user_id`)) ENGINE = InnoDB;")
+	_, err = m.db.Exec("CREATE TABLE IF NOT EXISTS `shortlinks` ( `id` BIGINT NOT NULL AUTO_INCREMENT , `link` TEXT NOT NULL , `short` VARCHAR(30) NOT NULL , `user` INT NOT NULL , `created` TIMESTAMP NOT NULL , PRIMARY KEY (`id`), FOREIGN KEY (`user`) REFERENCES `users`(`user_id`)) ENGINE = InnoDB;")
 	if err != nil {
 		panic(err)
 	}
