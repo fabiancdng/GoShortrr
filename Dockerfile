@@ -17,7 +17,6 @@ RUN npm install
 RUN npm run build
 
 # Stage 3: Hosting (only Alpine running the Go binary)
-
 FROM alpine:latest as final
 WORKDIR /app
 COPY --from=backend-build /app .
