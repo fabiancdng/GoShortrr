@@ -13,6 +13,7 @@ import (
 	"github.com/fabiancdng/GoShortrr/internal/config"
 	"github.com/fabiancdng/GoShortrr/internal/database/mysql"
 	"github.com/fabiancdng/GoShortrr/internal/webserver"
+	"log"
 )
 
 func main() {
@@ -23,11 +24,13 @@ func main() {
 	//                            //
 	////////////////////////////////
 
-	// Read and parse the config.yml file
+	// Try to read and parse the config file 'config.yml'
+	// If it doesn't exist, try to read and parse config from env variables
 	config, err := config.ParseConfig("./config/config.yml")
 	if err != nil {
 		panic(err)
 	}
+	log.Println(config)
 
 	//////////////////////////////////
 	//                              //
