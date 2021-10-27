@@ -24,7 +24,7 @@ func main() {
 
 	// Delay startup a little (for example to make sure all needed
 	// Docker containers in the stack are online)
-	utils.StartupDelay(5 * time.Second)
+	utils.StartupDelay(10 * time.Second)
 
 	////////////////////////////////
 	//                            //

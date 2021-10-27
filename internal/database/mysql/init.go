@@ -69,6 +69,8 @@ func (m *MySQL) Init() error {
 		panic(err)
 	}
 
+	defer rows.Close()
+
 	for rows.Next() {
 		rows.Scan(&userCount)
 	}

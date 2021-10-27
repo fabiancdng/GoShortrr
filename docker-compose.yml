@@ -1,0 +1,40 @@
+version: '3.8'
+services:
+  mariadb:
+    image: mariadb:latest
+    restart: 'unless-stopped'
+    container_name: goshortrr-db
+    volumes:
+      - './docker-volumes/mariadb:/var/lib/mysql'
+    environment:
+      MYSQL_ROOT_PASSWORD: '//// FILL IN YOUR MYSQL PASSWORD ////'
+      MYSQL_DATABASE: 'goshortrr'
+      MYSQL_USER: 'goshortrr'
+      MYSQL_PASSWORD: '//// FILL IN YOUR MYSQL PASSWORD ////'
+
+  goshortrr:
+    # Comment out if you don't want to use the pre-built image.
+    # image: 
+    # Uncomment if you intend to build the image yourself.
+    build: .
+    container_name: goshortrr
+    restart: 'unless-stopped'
+    ports:
+      - '4000:4000'
+    # Uncomment if you intend to use the config.yml file instead
+    # of environment variables.
+    # volumes:
+    #  - './docker-volumes/config:/app/config'
+    depends_on:
+      - mariadb
+    environment:
+      # MySQL credentials
+      GOSHORTRR_MYSQL_HOST: 'goshortrr-db'
+      GOSHORTRR_MYSQL_PORT: '3306'
+      GOSHORTRR_MYSQL_DB: 'goshortrr'
+      GOSHORTRR_MYSQL_USER: 'goshortrr'
+      GOSHORTRR_MYSQL_PASSWORD: '//// FILL IN YOUR MYSQL PASSWORD ////'
+
+      # GoShortrr settings
+      GOSHORTRR_ADDRESS_AND_PORT: '0.0.0.0:4000' # Address and port GoShortrr binds to within the container
+      # GOSHORTRR_API_ACCESS_TOKEN: '//// FILL IN YOUR TOKEN ////' # Optional token for alternative authorization of API requests
