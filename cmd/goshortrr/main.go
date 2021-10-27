@@ -12,11 +12,19 @@ package main
 import (
 	"github.com/fabiancdng/GoShortrr/internal/config"
 	"github.com/fabiancdng/GoShortrr/internal/database/mysql"
+	"github.com/fabiancdng/GoShortrr/internal/utils"
 	"github.com/fabiancdng/GoShortrr/internal/webserver"
 	"log"
+	"time"
 )
 
 func main() {
+	// Print startup banner
+	utils.PrintStartupBanner()
+
+	// Delay startup a little (for example to make sure all needed
+	// Docker containers in the stack are online)
+	utils.StartupDelay(5 * time.Second)
 
 	////////////////////////////////
 	//                            //
