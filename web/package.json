@@ -1,6 +1,7 @@
 {
   "name": "goshortrr-web",
-  "version": "0.1.0",
+  "version": "0.0.0",
+  "description": "🔗 A fast, simple, and powerful URL Shortener built with Go and React.",
   "private": true,
   "dependencies": {
     "@chakra-ui/icons": "^1.0.15",

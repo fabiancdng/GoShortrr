@@ -1,7 +1,7 @@
 {
   "project": {
-    "name": "gitmoji-changelog",
-    "description": "A changelog generator for gitmoji 😜",
-    "version": "2.0.1"
+    "name": "GoShortrr",
+    "description": "🔗 A fast, simple, and powerful URL Shortener built with Go and React.",
+    "version": "0.0.0"
   }
 }
