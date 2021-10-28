@@ -1,0 +1,40 @@
+name: Build release assets and deploy to GitHub releases
+
+on:
+  push:
+    tags:
+      - '*'
+
+jobs:
+  releases-deploy:
+    name: GitHub Releases Deploy
+    runs-on: ubuntu-latest
+    steps:
+      - name: Set up Go
+        uses: actions/setup-go@v1
+        with:
+          go-version: 1.16
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v1
+        with:
+          node-version: '16.x'
+
+      - name: Check out code into the Go module directory
+        uses: actions/checkout@v2
+
+      - name: Build release assets
+        run: cd scripts && bash ./build.sh
+
+      - name: Get the tag
+        id: get_tag
+        run: echo ::set-output name=TAG::${GITHUB_REF/refs\/tags\//}
+
+      - name: Get the version
+        id: get_version
+        run: echo ::set-output name=VERSION::${GITHUB_REF/refs\/tags\/v/}
+
+      - name: Deploy to Releases
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: gh release create -d -t "Release ${{ steps.get_version.outputs.VERSION }}" ${{ steps.get_tag.outputs.TAG }} ./scripts/bin/*
