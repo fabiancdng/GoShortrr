@@ -97,10 +97,13 @@ export const createShortlink = (link) => {
             // Reject promise with the HTTP error code as value
             reject(res.status);
         } else {
-            // Grab unique part of the shortlink, append the root URL, and
-            // resolve the promise with it as value
+            // Grab unique part of the shortlink, append the root URL, remove possible double slash,
+            // and resolve the promise with it as value
             res = await res.json();
             let short = host.replace('dashboard', '') + res.short;
+            // Remove possible double slash from returned short URL
+            var shortArray = short.split('://');
+            short = shortArray[0] + '://' + shortArray[1].replaceAll('//', '');
             resolve(short);
         }
     });
