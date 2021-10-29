@@ -1,4 +1,4 @@
-version: '3.8'
+version: '3'
 services:
   mariadb:
     image: mariadb:latest
@@ -14,9 +14,9 @@ services:
 
   goshortrr:
     # Comment out if you don't want to use the pre-built image.
-    # image: 
+    image: ghcr.io/fabiancdng/goshortrr:latest
     # Uncomment if you intend to build the image yourself.
-    build: .
+    # build: .
     container_name: goshortrr
     restart: 'unless-stopped'
     ports:
