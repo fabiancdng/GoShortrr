@@ -20,33 +20,23 @@ func (m *MySQL) CreateShortlink(shortlinkToCreate *models.ShortlinkToCreate, use
 	return true
 }
 
-// Validates whether or not the generated unique part of a shortlink
-// is okay to be used.
-func (m *MySQL) ValidateShortlink(short string) bool {
-	if short == "" {
-		// Shortlink can't be empty
-		return false
-	}
-
-	if len(short) > 30 {
-		// Shortlink too long
-		return false
-	}
-
-	// Checks if shortlink is already taken
+// Performs a DB lookup for the passed unique part of a shortlink
+// and checks whether or not it is already taken by a shortlink
+func (m *MySQL) IsShortlinkTaken(short string) bool {
+	// Checks whether or not shortlink is already taken
 	result, err := m.db.Query("SELECT * FROM `shortlinks` WHERE `short` = ?", short)
-
 	if err != nil {
 		log.Println(err)
 	}
 
 	if result.Next() {
 		// Shortlink is already taken
-		return false
+		return true
 	}
 
-	// Shortlink is valid
-	return true
+	// Shortlink is not taken
+	// Hence, it's okay to be created
+	return false
 }
 
 // Obtains a shortlink from the database by it's unique part.

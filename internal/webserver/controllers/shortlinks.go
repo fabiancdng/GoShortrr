@@ -72,17 +72,43 @@ func (controller *ShortlinkController) createShortlink(ctx *fiber.Ctx) error {
 	shortlinkToCreate := new(models.ShortlinkToCreate)
 	ctx.BodyParser(shortlinkToCreate)
 
+	// No URL to map the shortlink to provided in the request,
+	// hence deny request (empty shortlinks don't make sense)
+	if shortlinkToCreate.Link == "" {
+		return fiber.NewError(400, "No long link provided")
+	}
+
+	// Check if the link provided in the request is even
+	// a valid URL
+	if utils.IsStringValidURL(shortlinkToCreate.Link) == false {
+		return fiber.NewError(400, "The long link provided is not a valid URL")
+	}
+
+	// No unique part of the shortlink defined in the request,
+	// so a random one is generated
 	if shortlinkToCreate.Short == "" {
-		for controller.db.ValidateShortlink(shortlinkToCreate.Short) == false {
+		// Check if unique part is not already taken by another shortlink
+		// in the database
+		for controller.db.IsShortlinkTaken(shortlinkToCreate.Short) == true {
 			short, _ := utils.GenerateRandomShortString(5)
 			shortlinkToCreate.Short = short
 		}
+	} else {
+		// The user provided a shortlink in the request
+		if len(shortlinkToCreate.Short) > 30 {
+			// Provided shortlink is too long
+			// TODO: Make max shortlink length a config item
+			return fiber.NewError(400, "Shortlink too long")
+		}
 	}
 
-	if controller.db.ValidateShortlink(shortlinkToCreate.Short) == false {
-		return fiber.NewError(409, "Shortlink Invalid Or Already Taken")
+	// Perform further checks (like a lookup if the shortlink is already taken
+	// or too long/short)
+	if controller.db.IsShortlinkTaken(shortlinkToCreate.Short) == true {
+		return fiber.NewError(409, "Shortlink invalid or already taken")
 	}
 
+	// Create shortlink i.e. insert it into the database
 	controller.db.CreateShortlink(shortlinkToCreate, user)
 
 	return ctx.JSON(fiber.Map{
