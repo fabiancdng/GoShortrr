@@ -73,7 +73,7 @@ export default function Sidebar({ mobileNav }) {
                     alignItems='flex-start'
                     as='nav'
                 >
-                    <NavItem link='/dashboard' icon={ FiHome } title='Dashboard' active />
+                    <NavItem link='/dashboard' icon={ FiHome } title='Dashboard' />
                     <NavItem link='/dashboard/shortlinks' icon={ FiLink } title='Shortlinks' />
                     <NavItem icon={ FiUser } title='Users' disabled />
                     <NavItem icon={ FiInfo } title='Infos' disabled />

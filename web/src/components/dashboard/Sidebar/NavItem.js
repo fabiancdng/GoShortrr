@@ -7,8 +7,16 @@ import {
     MenuButton,
 } from '@chakra-ui/react';
 import { Link } from 'react-router-dom';
+import { useLocation } from 'react-router';
 
-export default function NavItem({ link, icon, title, active, disabled }) {
+export default function NavItem({ link, icon, title, disabled }) {
+    // The route the user is currently on
+    const route = useLocation().pathname;
+
+    // Whether the user is currently on the site
+    // this link is pointing to
+    const active = route === link ? true : false;
+
     return (
         <Link to={ link } style={ { width: '100%' } }>
             <Flex
