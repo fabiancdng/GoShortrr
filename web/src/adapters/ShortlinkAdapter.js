@@ -31,10 +31,10 @@ export const host = window.location.protocol + '//' + window.location.host + '/'
  */
 export const getShortlinkData = (link) => {
     return new Promise(async (resolve, reject) => {
-        // Remove possible root URL / path from the URL
+        // Remove possible root URL / path / slash from the URL
         link = link.replace(host, '');
         var location = host.replace('http://', '').replace('https://', '');
-        link = link.replace(location, '');
+        link = link.replace(location, '').replace('/', '');
         
         var res = await fetch(`/api/shortlink/get/${link}`);
         
