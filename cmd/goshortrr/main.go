@@ -10,15 +10,12 @@
 package main
 
 import (
-<<<<<<< HEAD
+	"time"
+
 	"github.com/fabiancdng/GoShortrr/internal/config"
 	"github.com/fabiancdng/GoShortrr/internal/database/mysql"
 	"github.com/fabiancdng/GoShortrr/internal/utils"
 	"github.com/fabiancdng/GoShortrr/internal/webserver"
-	"log"
-=======
->>>>>>> d26e3f7 (🐛 Front-End: Fix Double Slash in Shortlink)
-	"time"
 )
 
 func main() {
