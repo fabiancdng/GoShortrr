@@ -27,9 +27,7 @@ func main() {
 	utils.StartupDelay(10 * time.Second)
 
 	////////////////////////////////
-	//                            //
 	//           CONFIG           //
-	//                            //
 	////////////////////////////////
 
 	// Try to read and parse the config file 'config.yml'
@@ -40,9 +38,7 @@ func main() {
 	}
 
 	//////////////////////////////////
-	//                              //
 	//           DATABASE           //
-	//                              //
 	//////////////////////////////////
 
 	// Instantiate Database object
@@ -57,9 +53,7 @@ func main() {
 	}
 
 	///////////////////////////////////
-	//                               //
 	//           WEBSERVER           //
-	//                               //
 	///////////////////////////////////
 
 	// Instantiate WebServer object

@@ -8,9 +8,7 @@ import (
 // Defines what methods a database middleware must provide.
 type Database interface {
 	//////////////////////////////////////
-	//                                  //
 	//    INTERNAL DATABASE AFFAIRES    //
-	//                                  //
 	//////////////////////////////////////
 
 	// Opens a database connection that is safe for concurrent use
@@ -24,9 +22,7 @@ type Database interface {
 	Init() error
 
 	//////////////////////////////////
-	//                              //
 	//       USERS / ACCOUNTS       //
-	//                              //
 	//////////////////////////////////
 
 	// Inserts the passed user into the database.
@@ -39,9 +35,7 @@ type Database interface {
 	GetUser(username string) (*models.User, error)
 
 	////////////////////////////
-	//                        //
 	//       SHORTLINKS       //
-	//                        //
 	////////////////////////////
 
 	// Inserts the passed shortlink into the database and
