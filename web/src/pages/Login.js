@@ -65,7 +65,7 @@ const Login = () => {
                 alignItems='center'
                 justifyContent='center'
             >
-                <img width='30%' alt='GoShortrr logo' src='/goshortrr-logo-bg-circle.png' />
+                <img width='20%' alt='GoShortrr logo' src='/goshortrr-logo-bg-circle.png' />
             </Flex>
 
             <Box p={8} minW={{ base: '90%', md: '600px' }} borderWidth={1} borderRadius={8} boxShadow='lg'>
