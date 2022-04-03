@@ -34,10 +34,7 @@ jobs:
         id: get_version
         run: echo ::set-output name=VERSION::${GITHUB_REF/refs\/tags\/v/}
 
-      - name: Generate version changelog
-        run: cd scripts && node generate_version_changelog.js
-
       - name: Deploy to Releases
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: gh release create -F VERSION_LOG.md -t "Release ${{ steps.get_version.outputs.VERSION }}" ${{ steps.get_tag.outputs.TAG }} ./scripts/bin/*
+        run: gh release create -t "Release ${{ steps.get_version.outputs.VERSION }}" ${{ steps.get_tag.outputs.TAG }} ./scripts/bin/*
