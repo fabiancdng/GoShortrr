@@ -19,9 +19,6 @@ import (
 )
 
 func main() {
-	// Print startup banner
-	utils.PrintStartupBanner()
-
 	// Delay startup a little (for example to make sure all needed
 	// Docker containers in the stack are online)
 	utils.StartupDelay(10 * time.Second)
