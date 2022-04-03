@@ -1,8 +1,10 @@
 package utils
 
 import (
+	"crypto/rand"
 	"fmt"
 	"log"
+	"net/url"
 	"time"
 
 	"github.com/fatih/color"
@@ -19,14 +21,48 @@ func StartupDelay(duration time.Duration) {
 	time.Sleep(duration)
 }
 
-// Prints some ASCII art
-// TODO: Print version as well
-func PrintStartupBanner() {
-	log.Println(`
- ____  _                _   _             _             
-/ ___|| |__   ___  _ __| |_(_)_ __   __ _| |_ ___  _ __ 
-\___ \| '_ \ / _ \| '__| __| | '_ \ / _  | __/ _ \| '__|
- ___) | | | | (_) | |  | |_| | | | | (_| | || (_) | |   
-|____/|_| |_|\___/|_|   \__|_|_| |_|\__,_|\__\___/|_|   
-	`)
+const chars = "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
+
+// Generates a random string that is used as the unique part of a shortlink.
+func GenerateRandomShortString(length int) (string, error) {
+	bytes := make([]byte, length)
+
+	if _, err := rand.Read(bytes); err != nil {
+		return "", err
+	}
+
+	for i, b := range bytes {
+		bytes[i] = chars[b%byte(len(chars))]
+	}
+
+	return string(bytes), nil
+}
+
+// Checks whether or not the passed string is a valid
+// URL.
+//
+// Needed for instance for validating long and short links
+// and for checking whether they're okay to be created/deleted
+// or okay to be further proccessed.
+func IsStringValidURL(str string) bool {
+	// Try to parse string as raw URL,
+	// if that's not possible, the string is not
+	// a valid URL
+	_, err := url.ParseRequestURI(str)
+	if err != nil {
+		// Not a valid URL
+		return false
+	}
+
+	// Try to parse string as URL
+	// If anything mandatory is missing in the parsed URL,
+	// the string is not a valid URL
+	u, err := url.Parse(str)
+	if err != nil || u.Scheme == "" || u.Host == "" {
+		// Not a valid URL
+		return false
+	}
+
+	// The link seems to be a valid URL
+	return true
 }
